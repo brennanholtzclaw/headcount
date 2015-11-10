@@ -1,3 +1,11 @@
+class Enrollment
+
+  def initialize(location)
+  end
+
+end
+
+
 #def kindergarten_participation_by_year
 ## returns hash with percentage for all years in data
 
