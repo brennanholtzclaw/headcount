@@ -8,24 +8,29 @@
 
 ##needs to parse out name of district and create objects for each
 
-require_relative 'district'
 # require_relative 'enrollment_repository'
-require_relative 'kindergarten_parser'
+# require_relative 'kindergarten_parser'
+require './lib/district'
+require 'csv'
 require 'pry'
 
 class DistrictRepository
-  attr_reader :districts
-  attr_accessor :enrollment_repo
+  attr_reader :district, :years, :data_format, :data
+  attr_accessor :district_repo
 
   def initialize
-    @districts = {}
-    @enrollment_repo = EnrollmentRepository.new
+    @district_repo = {}
   end
 
-  def load_data
-    data = KindergartenParser.new#(call method or parse automatically?)
-    data.keys.each do |district|
-      @districts[district.upcase] = District.new(name: district)
-      @districts[district.upcase] = @enrollment_repo.enrollments[district]
+  def load_data(filepath)
+    CSV.open(filepath, headers: true).each do |data|
+      # binding.pry
+      row_data = {district:     data["Location"],
+                  years:        data["TimeFrame"],
+                  data_format:  data["DataFormat"],
+                  data:         data["Data"]}
+
+      @district_repo[data["Location"]] = District.new(row_data)
     end
   end
+end

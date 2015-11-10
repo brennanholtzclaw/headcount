@@ -2,12 +2,14 @@
 
 #.to_s.upcase
 
+# require './lib/district_repository'
+# require './lib/kindergarten_parser'
 
 class District
-  attr_reader :name
+  attr_reader :district
 
-  def initialize(name_hash)
-    @name = name_hash[:name].upcase
+  def initialize(data = {})
+    @district = data[:district].upcase
   end
 
 end

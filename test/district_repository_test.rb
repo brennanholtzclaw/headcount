@@ -12,18 +12,29 @@
 ###values are instances of district class
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/district_repository'
-# require 'test_fixtures.csv'
+require './lib/district_repository'
+require 'csv'
+
 
 class DistrictRepositoryTest < Minitest::Test
 
 def test_it_can_load_data
+  dr = DistrictRepository.new
+  dr.load_data('./test/district_test_fixture.csv')
+  #just don't break#
 end
 
 def test_load_data_creates_hash_for_listed_districts
+  dr = DistrictRepository.new
+  dr.load_data('./test/district_test_fixture.csv')
+
+  assert dr.district_repo.length > 2
+  assert_equal 14, dr.district_repo.length
+  binding.pry
 end
 
 def test_it_can_find_by_name
+
 end
 
 def test_find_all_lists_array_of_unique_districts
