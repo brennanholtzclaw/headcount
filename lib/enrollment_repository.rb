@@ -11,13 +11,15 @@ class EnrollmentRepository
     kindergarten = CSV.open("/Users/elizabethsebian/turing/1module/projects/headcount/data/Kindergartners in full-day program.csv", {:headers => true})
 
     kindergarten.readlines.each do |line|
-      @names[line["Location"]] = Enrollment.new(line["Location"])
+      @names[line["Location"].downcase] = Enrollment.new(line["Location"])
     end
 
   end
 
-  def find_by_name
-  ####case insensitive search(downcase)
+  def find_by_name(district)
+    if @names.include?(district.downcase)
+      @names[district.downcase]
+    end
   end
 
 end
@@ -25,6 +27,7 @@ end
 er = EnrollmentRepository.new
 er.load_data
 puts er.names
+puts er.find_by_name("Academy 20")
 
 # er.load_data({
 #   :enrollment => {
@@ -33,3 +36,6 @@ puts er.names
 # })
 # enrollment = er.find_by_name("ACADEMY 20")
 # => <Enrollment>
+
+# TODO: load from given filepath
+# TODO: add header_converter to CSV.open
