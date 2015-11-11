@@ -1,9 +1,10 @@
 require 'csv'
 require 'pry'
 require_relative 'kindergarten_participation'
+require_relative 'enrollment_repository'
 
 class Parser
-  attr_reader :data_location, :file, :extracted_data, :kg_participation
+  attr_reader :data_location, :file, :extracted_data, :kg_participation, :district
 
   def read_file(file)
     @kg_participation = {}
@@ -15,9 +16,10 @@ class Parser
   def flatten_data
     @csv.readlines.each do |data|
       if @kg_participation[data["Location"].downcase].nil?
-        @kg_participation[data["Location"].downcase] = {data["TimeFrame"]=>data["Data"]}
+        @kg_participation[data["Location"].downcase] = {data["TimeFrame"]=>data["Data"].to_f.round(3)}
+
       else
-        @kg_participation[data["Location"].downcase][data["TimeFrame"]] = data["Data"]
+        @kg_participation[data["Location"].downcase][data["TimeFrame"]] = data["Data"].to_f.round(3)
       end
     end
   end
@@ -31,3 +33,8 @@ class Parser
     "kindergarten_participation"
   end
 end
+
+# p = Parser.new
+# p.read_file('./test/data/kindergarten_enrollment_sample.csv')
+# puts p.pretty_data("colorado")
+
