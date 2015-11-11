@@ -24,6 +24,50 @@ class Parser
   end
 
 
+  # OLD_2
+  # CSV.open(file, headers: true).each do |data|
+  #   if @kg_participation[data["Location"].downcase].nil?
+  #     @kg_participation[data["Location"].downcase] = {data["TimeFrame"]=>data["Data"]}
+  #   else
+  #     @kg_participation[data["Location"].downcase][data["TimeFrame"]] = data["Data"]
+  #   end
+  # end
+  #
+  # NEW_2
+  # csv_readlines(concatenate_data)
+  #
+  # OLD_1
+  # csv = CSV.open(@path, {:headers => true})
+  # csv.readlines.each do |line|
+  #   district = line["Location"].downcase
+  #   @names[district] = Enrollment.new(parsed.pretty_data(district))
+  #   # this :name => line["Location"], :data_label => :dataset will become (dataset)
+  # end
+  #
+  # NEW_1
+  # csv = csv_readlines(enrollment_instances)
+  #
+  # def csv_readlines(do_something)
+  #   csv = CSV.open(@path, {:headers => true})
+  #   csv.readlines.each do |line|
+  #     do_something
+  #   end
+  # end
+  #
+  # def enrollment_instances
+  #   district = line["Location"].downcase
+  #   @names[district] = Enrollment.new(parsed.pretty_data(district))
+  # end
+  #
+  # def concatenate_data
+  #   if @kg_participation[data["Location"].downcase].nil?
+  #     @kg_participation[data["Location"].downcase] = {data["TimeFrame"]=>data["Data"]}
+  #   else
+  #     @kg_participation[data["Location"].downcase][data["TimeFrame"]] = data["Data"]
+  #   end
+  # end
+
+
   def pretty_data(district)
     # PRODUCES {:name=>"ACADEMY 20", :kindergarten_participation=>{"2007"=>"0.39159", "2006"=>"0.35364", "2005"=>"0.26709", "2004"=>"0.30201", "2008"=>"0.38456", "2009"=>"0.39", "2010"=>"0.43628", "2011"=>"0.489", "2012"=>"0.47883", "2013"=>"0.48774", "2014"=>"0.49022"}}
     pretty = {}
@@ -36,6 +80,6 @@ class Parser
   end
 end
 
-# parsed = Parser.new('./test/data/kindergarten_enrollment_sample.csv')
-# parsed.read_file('./test/data/kindergarten_enrollment_sample.csv')
-# parsed.pretty_data("Academy 20")
+parsed = Parser.new('./test/data/kindergarten_enrollment_sample.csv')
+parsed.read_file('./test/data/kindergarten_enrollment_sample.csv')
+parsed.pretty_data("Academy 20")
