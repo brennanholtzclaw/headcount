@@ -24,7 +24,6 @@ class DistrictRepository
 
   def load_data(filepath)
     CSV.open(filepath, headers: true).each do |data|
-      # binding.pry
       row_data = {district:     data["Location"],
                   years:        data["TimeFrame"],
                   data_format:  data["DataFormat"],
@@ -33,4 +32,23 @@ class DistrictRepository
       @district_repo[data["Location"]] = District.new(row_data)
     end
   end
+
+  def find_by_name(district_name)
+    if @district_repo.include?(district_name.upcase)
+      @district_repo.select {|k, v| k == district_name.upcase}
+    else
+      nil #is there an enumerable that returns nil?
+    end
+  end
+
+  def find_all_matching(district_name)
+     @district_repo.keys.select {|dist| dist.include?(district_name.upcase)}
+  end
+
+  def find_all
+    @district_repo.keys
+  end
+
 end
+
+# Unrelated: Anyone have a protip on “find_all_matching” for the district repository? I got the normal find and find all...
