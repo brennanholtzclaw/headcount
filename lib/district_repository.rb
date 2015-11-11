@@ -1,16 +1,4 @@
-#def find_by_name
-####case insensitive search(downcase)
-
-#def find_all_matching
-####case insensitive search(downcase)
-
-#def load_data( accept :symbol => value(file))
-
-##needs to parse out name of district and create objects for each
-
-# require_relative 'enrollment_repository'
-# require_relative 'kindergarten_parser'
-require './lib/district'  # ~> LoadError: cannot load such file -- ./lib/district
+require './lib/district'
 require 'csv'
 require 'pry'
 
@@ -23,20 +11,15 @@ class DistrictRepository
   end
 
   def load_data(filepath)
-    CSV.open(filepath, headers: true).each do |data|
-      row_data = {district:     data["Location"],
-                  years:        data["TimeFrame"],
-                  data_format:  data["DataFormat"],
-                  data:         data["Data"]}
-
-      @district_repo[data["Location"]] = District.new(row_data)
+    @file_path = filepath.fetch(:enrollment).fetch(:kindergarten)
+    CSV.open(@file_path, headers: true).each do |data|
+      @district_repo[data["Location"]] = District.new(data["Location"])
     end
   end
 
   def find_by_name(district_name)
     if @district_repo.include?(district_name.upcase)
-      @district_repo[district_name.upcase]
-      # @district_repo.select {|k, v| k == district_name.upcase}
+        @district_repo[district_name.upcase]
     else
       nil #is there an enumerable that returns nil?
     end
@@ -51,9 +34,13 @@ class DistrictRepository
   end
 end
 
-
-
-#one person merges branch into master
-#other person pulls master into their branch
-# git pull -r origin master
-#other person merges branch into master
+# def load_data(filepath)
+#   CSV.open(filepath, headers: true).each do |data|
+#     row_data = {district:     data["Location"],
+#                 years:        data["TimeFrame"],
+#                 data_format:  data["DataFormat"],
+#                 data:         data["Data"]}
+#
+#     @district_repo[data["Location"]] = District.new(row_data)
+#   end
+# end
