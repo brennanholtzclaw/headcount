@@ -1,13 +1,18 @@
-#test_it_accepts_data (?)
+require 'minitest'
+require 'minitest/autorun'
+require 'minitest/pride'
 
-# test_it_has_a_name_key_value_pair
+require_relative '../lib/enrollment'
 
-# test_it_accepts_name_and_dataset_when_initialized
+class EnrollmentTest < Minitest::Test
 
-# test_kg_part_by_year_returns_list_of_years_and_rates
+  def test_returns_percentage_for_all_years_in_data
 
-# test_kg_part_by_year_returns_truncated_3_digit_floating_point_number
+  end
 
-# test_kg_part_in_year_accepts_one_arg
+  def test_returns_kindergarten_participation_by_year
+    ##returns nil if given unknown year
+    ##returns floatnum for percentage
+  end
 
-# test_kg_part_in_year_returns_rate_for_given_year
+end
