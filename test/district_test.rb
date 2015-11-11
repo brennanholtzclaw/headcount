@@ -11,8 +11,8 @@ class DistrictTest < Minitest::Test
 
 
   def test_sets_upcased_name_of_district
-    dist1 = District.new(name: "denver")
-    dist2 = District.new(name: "academy20")
+    dist1 = District.new(district: "denver")
+    dist2 = District.new(district: "academy20")
 
     refute_equal "denver",    dist1.name
     assert_equal "DENVER",    dist1.name

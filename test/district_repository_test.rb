@@ -33,15 +33,15 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_it_can_find_by_a_full_unique_name
-    skip
+
     dr = DistrictRepository.new
     dr.load_data('./test/district_test_fixture.csv')
 
-    assert_equal District.new("ACADEMY 20"), dr.find_by_name("ACADEMY 20")
+    assert_equal "ACADEMY 20", dr.find_by_name("ACADEMY 20").name
   end
 
   def test_it_can_find_by_a_full_unique_downcased_name
-    skip
+
     dr = DistrictRepository.new
     dr.load_data('./test/district_test_fixture.csv')
 

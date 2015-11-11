@@ -10,7 +10,7 @@
 
 # require_relative 'enrollment_repository'
 # require_relative 'kindergarten_parser'
-require './lib/district'
+require './lib/district'  # ~> LoadError: cannot load such file -- ./lib/district
 require 'csv'
 require 'pry'
 
@@ -35,7 +35,8 @@ class DistrictRepository
 
   def find_by_name(district_name)
     if @district_repo.include?(district_name.upcase)
-      @district_repo.select {|k, v| k == district_name.upcase}
+      @district_repo[district_name.upcase]
+      # @district_repo.select {|k, v| k == district_name.upcase}
     else
       nil #is there an enumerable that returns nil?
     end
@@ -48,7 +49,11 @@ class DistrictRepository
   def find_all
     @district_repo.keys
   end
-
 end
 
-# Unrelated: Anyone have a protip on “find_all_matching” for the district repository? I got the normal find and find all...
+
+
+#one person merges branch into master
+#other person pulls master into their branch
+# git pull -r origin master
+#other person merges branch into master
