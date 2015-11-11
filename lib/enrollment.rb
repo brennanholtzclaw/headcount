@@ -1,14 +1,14 @@
 class Enrollment
+  attr_reader :data
 
-  def initialize(location)
-    # @district = location[:name]
-    # @data_1 = location[:kindergarten_participation]
+  def initialize(data)
+    @data = data
   end
+
+
 
 end
 
-# # (:name => line["Location"], :kindergarten_participation => parser.dataset_label)
-#
 # def kindergarten_participation_by_year
 # ## returns hash with percentage for all years in data
 #
