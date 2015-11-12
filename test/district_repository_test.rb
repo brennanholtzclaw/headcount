@@ -10,7 +10,7 @@ class DistrictRepositoryTest < Minitest::Test
   def create_and_load_district_repository
     @dr = DistrictRepository.new
     @dr.load_data({:enrollment => {
-                  :kindergarten => "./test/data/district_test_fixture.csv"}})
+                   :kindergarten => "./test/data/district_test_fixture.csv"}})
   end
 
   def test_it_can_load_data

@@ -8,11 +8,8 @@ class HeadcountAnalystTest < Minitest::Test
 
   def create_district_repo_and_hc_analyst
     @dr = DistrictRepository.new
-    @dr.load_data({
-      :enrollment => {
-        :kindergarten => "./test/data/district_test_fixture.csv"
-      }
-    })
+    @dr.load_data( {:enrollment => {
+                    :kindergarten => "./test/data/district_test_fixture.csv"}})
     @ha = HeadcountAnalyst.new(dr)
   end
 
