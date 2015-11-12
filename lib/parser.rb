@@ -1,6 +1,5 @@
 require 'csv'
 require 'pry'
-require_relative 'kindergarten_participation'
 require_relative 'enrollment_repository'
 
 class Parser
