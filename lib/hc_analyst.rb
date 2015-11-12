@@ -2,7 +2,7 @@ require 'csv'
 require 'pry'
 require './lib/district_repository'
 
-class HeadCountAnalyst
+class HeadcountAnalyst
 attr_reader :master_repo
 
   def initialize(data)

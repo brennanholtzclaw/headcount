@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/hc_analyst'
 
-class HeadCountAnalystTest < Minitest::Test
+class HeadcountAnalystTest < Minitest::Test
   attr_reader :dr, :ha
 
   def create_district_repo_and_hc_analyst
@@ -13,7 +13,7 @@ class HeadCountAnalystTest < Minitest::Test
         :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
-    @ha = HeadCountAnalyst.new(dr)
+    @ha = HeadcountAnalyst.new(dr)
   end
 
   def test_it_accepts_district_repository
