@@ -14,7 +14,6 @@ class HeadCountAnalystTest < Minitest::Test
     })
     hca = HeadCountAnalyst.new(dr)
     assert hca.master_repo
-    # assert_equal 0, hca.master_repo
   end
 
   def test_it_finds_a_districts_enrollment_numbers
@@ -32,10 +31,3 @@ class HeadCountAnalystTest < Minitest::Test
 
   end
 end
-
-
-# ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO') # => 0.766
-# average of Academy 20 kg participation
-  # # find hash of Academy 20's kindergarten_participation_by_year
-  #   @dr.er.enrollments
-  # take average of all those values

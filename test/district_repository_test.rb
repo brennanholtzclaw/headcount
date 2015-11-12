@@ -124,9 +124,6 @@ class DistrictRepositoryTest < Minitest::Test
       }
     })
 
-
     assert dr.er.enrollments.length > 5
   end
-
-
 end

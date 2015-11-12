@@ -38,10 +38,4 @@ class EnrollmentTest < Minitest::Test
     assert_nil e.kindergarten_participation_in_year("1998")
   end
 
-
-
-  ##returns nil if given unknown year
-  ##returns floatnum for percentage
-
-
 end

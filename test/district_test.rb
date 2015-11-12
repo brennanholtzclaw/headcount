@@ -1,14 +1,8 @@
-#test_name_returns_string
-##should return an upcased string that is the name of the district
-##
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/district'
-# require 'test_fixtures'
-
 
 class DistrictTest < Minitest::Test
-
 
   def test_sets_upcased_name_of_district
     dist1 = District.new(district: "denver")

@@ -14,7 +14,6 @@ class HeadCountAnalystTest < Minitest::Test
     })
     hca = HeadCountAnalyst.new(dr)
     assert hca.master_repo
-    # assert_equal 0, hca.master_repo
   end
 
   def test_it_finds_a_districts_enrollment_numbers
@@ -81,8 +80,8 @@ class HeadCountAnalystTest < Minitest::Test
     ha = HeadCountAnalyst.new(dr)
 
     expected = {"2010"=>2.294, "2011"=>2.045, "2012"=>2.088, "2013"=>2.045, "2014"=>2.041}
-    
+
     assert_equal expected, ha.kindergarten_participation_rate_variation_trend('Adams County 14', :against => 'academy 20')
   end
-# ha.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO') # => {2009 => 0.766, 2010 => 0.566, 2011 => 0.46 }
+
 end
