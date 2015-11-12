@@ -10,7 +10,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
     #just don't break#
@@ -20,7 +20,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 
@@ -33,7 +33,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 
@@ -45,7 +45,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 
@@ -56,7 +56,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 
@@ -67,7 +67,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 
@@ -78,7 +78,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 
@@ -89,7 +89,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 
@@ -106,7 +106,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
 

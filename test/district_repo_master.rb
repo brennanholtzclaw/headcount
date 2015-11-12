@@ -9,7 +9,7 @@ class HeadCountAnalystTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
     hca = HeadCountAnalyst.new(dr)
@@ -20,7 +20,7 @@ class HeadCountAnalystTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./test/district_test_fixture.csv"
+        :kindergarten => "./test/data/district_test_fixture.csv"
       }
     })
     hca = HeadCountAnalyst.new(dr)
