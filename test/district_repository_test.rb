@@ -16,7 +16,7 @@ class DistrictRepositoryTest < Minitest::Test
   def test_it_can_load_data
     create_and_load_district_repository
 
-    assert @dr
+    assert dr.district_repo
   end
 
   def test_load_data_creates_hash_for_listed_districts
