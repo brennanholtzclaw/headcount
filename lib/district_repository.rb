@@ -1,20 +1,32 @@
 require './lib/district'
+require './lib/enrollment_repository'
 require 'csv'
 require 'pry'
 
 class DistrictRepository
   attr_reader :district, :years, :data_format, :data
-  attr_accessor :district_repo
+  attr_accessor :district_repo, :enrollment_repo, :er
 
   def initialize
     @district_repo = {}
+    # @enrollment_repo = {}
   end
 
   def load_data(filepath)
     @file_path = filepath.fetch(:enrollment).fetch(:kindergarten)
     CSV.open(@file_path, headers: true).each do |data|
       @district_repo[data["Location"]] = District.new(data["Location"])
+      #     row_data = {district:     data["Location"],
+      #                 years:        data["TimeFrame"],
+      #                 data_format:  data["DataFormat"],
+      #                 data:         data["Data"]}
+      # @enrollment_repo[data["Location"]] = Enrollment.new(row_data)
     end
+    if filepath.fetch(:enrollment)
+      @er = EnrollmentRepository.new
+      @er.load_data(filepath)
+    end
+    # binding.pry
   end
 
   def find_by_name(district_name)
