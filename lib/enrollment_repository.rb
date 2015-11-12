@@ -31,5 +31,3 @@ class EnrollmentRepository
     end
   end
 end
-
-# TODO: add header_converter to CSV.open

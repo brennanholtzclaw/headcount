@@ -9,31 +9,24 @@ class DistrictRepository
 
   def initialize
     @district_repo = {}
-    # @enrollment_repo = {}
   end
 
   def load_data(filepath)
     @file_path = filepath.fetch(:enrollment).fetch(:kindergarten)
     CSV.open(@file_path, headers: true).each do |data|
       @district_repo[data["Location"]] = District.new(data["Location"])
-      #     row_data = {district:     data["Location"],
-      #                 years:        data["TimeFrame"],
-      #                 data_format:  data["DataFormat"],
-      #                 data:         data["Data"]}
-      # @enrollment_repo[data["Location"]] = Enrollment.new(row_data)
     end
     if filepath.fetch(:enrollment)
       @er = EnrollmentRepository.new
       @er.load_data(filepath)
     end
-    # binding.pry
   end
 
   def find_by_name(district_name)
     if @district_repo.include?(district_name.upcase)
         @district_repo[district_name.upcase]
     else
-      nil #is there an enumerable that returns nil?
+      nil
     end
   end
 
@@ -45,14 +38,3 @@ class DistrictRepository
     @district_repo.keys
   end
 end
-
-# def load_data(filepath)
-#   CSV.open(filepath, headers: true).each do |data|
-#     row_data = {district:     data["Location"],
-#                 years:        data["TimeFrame"],
-#                 data_format:  data["DataFormat"],
-#                 data:         data["Data"]}
-#
-#     @district_repo[data["Location"]] = District.new(row_data)
-#   end
-# end

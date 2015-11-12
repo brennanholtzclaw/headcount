@@ -33,8 +33,3 @@ class Parser
     "kindergarten_participation"
   end
 end
-
-# p = Parser.new
-# p.read_file('./test/data/kindergarten_enrollment_sample.csv')
-# puts p.pretty_data("colorado")
-
