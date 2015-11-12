@@ -5,9 +5,9 @@ require_relative 'enrollment_repository'
 class Parser
   attr_reader :data_location, :file, :extracted_data, :kg_participation, :district
 
-  def read_file(file)
+  def read_file(filepath)
     @kg_participation = {}
-    @csv = CSV.open(file, headers: true)
+    @csv = FileIO.get_data(filepath)
 
     flatten_data
   end

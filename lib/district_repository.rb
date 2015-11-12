@@ -1,5 +1,6 @@
 require './lib/district'
 require './lib/enrollment_repository'
+require './lib/file_io'
 require 'csv'
 require 'pry'
 
@@ -12,14 +13,22 @@ class DistrictRepository
   end
 
   def load_data(filepath)
-    @file_path = filepath.fetch(:enrollment).fetch(:kindergarten)
-    CSV.open(@file_path, headers: true).each do |data|
-      @district_repo[data["Location"]] = District.new(data["Location"])
+    FileIO.get_data(filepath).each do |data|
+      add_new_instance(data)
     end
+
+    make_enrollment_repo(filepath)
+  end
+
+  def make_enrollment_repo(filepath)
     if filepath.fetch(:enrollment)
       @er = EnrollmentRepository.new
       @er.load_data(filepath)
     end
+  end
+
+  def add_new_instance(data)
+    @district_repo[data["Location"]] = District.new(data["Location"])
   end
 
   def find_by_name(district_name)

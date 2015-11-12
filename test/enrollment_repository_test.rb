@@ -21,7 +21,7 @@ class EnrollmentRepositoryTest < Minitest::Test
   def test_it_extracts_a_file_location
     create_and_setup_enrollment_repository
 
-    assert_equal "./test/data/kindergarten_enrollment_sample.csv", er.file_path
+    assert_equal "./test/data/kindergarten_enrollment_sample.csv", er.filepath[:enrollment][:kindergarten]
   end
 
   def test_it_stores_districts

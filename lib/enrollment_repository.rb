@@ -4,20 +4,19 @@ require_relative 'enrollment'
 require_relative 'parser'
 
 class EnrollmentRepository
-  attr_reader :enrollments, :location, :parser, :file_path
+  attr_reader :enrollments, :location, :parser, :filepath
 
-  def load_data(location)
-    @file_path = location.fetch(:enrollment).fetch(:kindergarten)
+  def load_data(filepath)
+    @filepath = filepath
     @enrollments = {}
     @parser = Parser.new
-    @parser.read_file(file_path)
-    @csv = CSV.open(file_path, {:headers => true})
+    @parser.read_file(filepath)
 
     store_enrollment_instances
   end
 
   def store_enrollment_instances
-    @csv.readlines.each do |line|
+    FileIO.get_data(@filepath).each do |line|
       district = line["Location"].downcase
       if @enrollments[line["Location"].downcase].nil?
         @enrollments[district] = Enrollment.new(@parser.pretty_data(district))
