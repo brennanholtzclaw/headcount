@@ -13,8 +13,11 @@ class DistrictRepository
   end
 
   def load_data(filepath)
-    FileIO.get_data(filepath).each do |data|
-      add_new_instance(data)
+
+    @district_data = FileIO.get_data(filepath)
+
+    MasterParser.names(@district_data).each do |name|
+      add_new_instance(name)
     end
 
     make_enrollment_repo(filepath)
@@ -27,9 +30,10 @@ class DistrictRepository
     end
   end
 
-  def add_new_instance(data)
-    @district_repo[data["Location"]] = District.new(data["Location"])
+  def add_new_instance(name)
+    @district_repo[name] = District.new(name)
   end
+
 
   def find_by_name(district_name)
     if @district_repo.include?(district_name.upcase)

@@ -2,6 +2,7 @@ require 'csv'
 require 'pry'
 require_relative 'enrollment'
 require_relative 'parser'
+require_relative 'master_parser'
 
 class EnrollmentRepository
   attr_reader :enrollments, :location, :parser, :filepath
@@ -16,13 +17,18 @@ class EnrollmentRepository
   end
 
   def store_enrollment_instances
-    FileIO.get_data(@filepath).each do |line|
-      district = line["Location"].downcase
-      if @enrollments[line["Location"].downcase].nil?
-        @enrollments[district] = Enrollment.new(@parser.pretty_data(district))
-      end
+    @enrollment_data = FileIO.get_data(@filepath)
+
+    MasterParser.names(@enrollment_data).each do |name|
+      district = name.downcase
+
+      @enrollments[district] = Enrollment.new(@parser.pretty_data(district))
     end
   end
+
+
+
+
 
   def find_by_name(district)
     if @enrollments.include?(district.downcase)

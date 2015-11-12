@@ -1,6 +1,7 @@
 require 'csv'
 require 'pry'
 require_relative 'enrollment_repository'
+require_relative 'file_io'
 
 class Parser
   attr_reader :data_location, :file, :extracted_data, :kg_participation, :district
