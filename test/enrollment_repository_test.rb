@@ -5,7 +5,8 @@ require 'minitest/pride'
 require_relative '../lib/enrollment_repository'
 
 class EnrollmentRepositoryTest < Minitest::Test
-attr_reader :er
+  attr_reader :er
+
   def test_it_exists
     er = EnrollmentRepository.new()
 

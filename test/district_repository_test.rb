@@ -5,7 +5,7 @@ require 'csv'
 
 
 class DistrictRepositoryTest < Minitest::Test
-  attr_reader :create_and_load_district_repository, :dr
+  attr_reader :dr
 
   def create_and_load_district_repository
     @dr = DistrictRepository.new
