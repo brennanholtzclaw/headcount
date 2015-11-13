@@ -10,6 +10,7 @@ class HeadcountAnalystTest < Minitest::Test
     @dr = DistrictRepository.new
     @dr.load_data( {:enrollment => {
                     :kindergarten => "./test/data/district_test_fixture.csv"}})
+
     @ha = HeadcountAnalyst.new(dr)
   end
 
@@ -21,18 +22,17 @@ class HeadcountAnalystTest < Minitest::Test
 
   def test_it_finds_a_districts_enrollment_numbers
     create_district_repo_and_hc_analyst
-
     expected = {"2010"=>0.436, "2011"=>0.489, "2012"=>0.479, "2013"=>0.488, "2014"=>0.49}
 
-    assert_equal expected, ha.find_all_data("Academy 20", :kindergarten_participation)
+    assert_equal expected, ha.find_all_data("Academy 20")
   end
 
   def test_average_finds_average_of_all_years_available_in_data
     create_district_repo_and_hc_analyst
 
-    assert_equal 0.476, ha.average("academy 20", :kindergarten_participation)
-    assert_equal 0.69, ha.average("colorado", :kindergarten_participation)
-    assert_equal 1.0, ha.average("adams county 14", :kindergarten_participation)
+    assert_equal 0.476, ha.average("academy 20")
+    assert_equal 0.69, ha.average("colorado")
+    assert_equal 1.0, ha.average("adams county 14")
   end
 
   def test_average_finds_variation_between_two_districts

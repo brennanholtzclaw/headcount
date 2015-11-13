@@ -1,9 +1,6 @@
 require 'pry'
-class MasterParser
 
-  # def self.district(data)
-  #   data["Location"]
-  # end
+class MasterParser
 
   def self.names(data)
     names = []
@@ -29,30 +26,26 @@ class MasterParser
     values
   end
 
-  def self.flattened_data(data, district)
+  def self.flattened_data(dataset, district)
     districts_data = {}
-    data.each do |line|
-      if districts_data[line["Location"].downcase].nil?
-        districts_data[line["Location"].downcase] = {line["TimeFrame"].to_i=>line["Data"].to_f.round(3)}
-      else
-        districts_data[line["Location"].downcase][line["TimeFrame"].to_i] = line["Data"].to_f.round(3)
+
+    dataset.each do |line|
+      if line["Location"].downcase == district.downcase
+        if districts_data == {}
+          districts_data[:name] = line["Location"]
+          districts_data[:data] = {line["TimeFrame"].to_i => line["Data"].to_f.round(3)}
+        elsif districts_data != {}
+          districts_data[:data][line["TimeFrame"].to_i] = line["Data"].to_f.round(3)
+        end
       end
     end
-    districts_data[district.downcase]
+    districts_data[:data]
   end
 
+  def self.pretty_data(data, district)
+    pretty = {}
 
-  # FileIO.get_data(@filepath).each do |line|
-  #   district = line["Location"].downcase
-  #   if @enrollments[line["Location"].downcase].nil?
-  #     @enrollments[district] = Enrollment.new(@parser.pretty_data(district))
-  #   end
-  # end
+    pretty = {name: district.upcase, kindergarten_participation: flattened_data(data, district)}
+  end
 
 end
-
-
-# FileIO.get_data(filepath).each do |data|
-#   @district_repo[MasterParser.district] = District.new(MasterParser.district)
-#
-#   @district_repo[data["Location"]] = District.new(data["Location"])

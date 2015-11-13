@@ -5,7 +5,7 @@ require 'csv'
 require 'pry'
 
 class DistrictRepository
-  attr_reader :district, :years, :data_format, :data
+  attr_reader :district, :years, :data_format, :data, :filepath
   attr_accessor :district_repo, :enrollment_repo, :er
 
   def initialize
@@ -13,6 +13,7 @@ class DistrictRepository
   end
 
   def load_data(filepath)
+    @filepath = filepath
 
     @district_data = FileIO.get_data(filepath)
 
@@ -33,7 +34,6 @@ class DistrictRepository
   def add_new_instance(name)
     @district_repo[name] = District.new(name)
   end
-
 
   def find_by_name(district_name)
     if @district_repo.include?(district_name.upcase)

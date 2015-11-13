@@ -4,7 +4,11 @@ require_relative 'parser'
 class FileIO
 
   def self.get_data(filepath)
-    file = filepath.fetch(:enrollment).fetch(:kindergarten)
+    if filepath.class == Hash
+      file = filepath.fetch(:enrollment).fetch(:kindergarten)
+    else
+      file = filepath
+    end
     CSV.open(file, headers: true)
   end
 

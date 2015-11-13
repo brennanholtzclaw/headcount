@@ -19,16 +19,17 @@ class EnrollmentRepository
   def store_enrollment_instances
     @enrollment_data = FileIO.get_data(@filepath)
 
+    @instantiation_data = @enrollment_data
+
     MasterParser.names(@enrollment_data).each do |name|
+
       district = name.downcase
 
-      @enrollments[district] = Enrollment.new(@parser.pretty_data(district))
+      @enrollments[district] = Enrollment.new(@instantiation_data)
     end
   end
 
-
-
-
+# MasterParser.flattened_data(@enrollment_data,district)
 
   def find_by_name(district)
     if @enrollments.include?(district.downcase)

@@ -9,23 +9,23 @@ attr_reader :master_repo
     @master_repo = data
   end
 
-  def find_all_data(district, dataset)
-    @master_repo.er.enrollments[district.downcase].data[dataset]
+  def find_all_data(district)
+    @master_repo.er.parser.kg_participation[district.downcase]
   end
 
-  def average(district, dataset)
-    district_dataset = find_all_data(district, dataset)
+  def average(district)
+    district_dataset = find_all_data(district)
     (district_dataset.values.inject(:+) / district_dataset.values.length).round(3)
   end
 
   def kindergarten_participation_rate_variation(district, options)
     d2 = options[:against]
-    (average(district,:kindergarten_participation)/average(d2,:kindergarten_participation)).round(3)
+    (average(district)/average(d2)).round(3)
   end
 
   def years_with_data(dist1, dist2)
-      a = find_all_data(dist1, :kindergarten_participation)
-      b = find_all_data(dist2, :kindergarten_participation)
+      a = find_all_data(dist1)
+      b = find_all_data(dist2)
       a.keys & b.keys
   end
 
@@ -34,8 +34,8 @@ attr_reader :master_repo
     a = years_with_data(dist1, dist2)
     hash = {}
     a.each do |year|
-      b = find_all_data(dist1, :kindergarten_participation)[year]
-      c = find_all_data(dist2, :kindergarten_participation)[year]
+      b = find_all_data(dist1)[year]
+      c = find_all_data(dist2)[year]
       hash[year] = (b/c).round(3)
     end
     hash
