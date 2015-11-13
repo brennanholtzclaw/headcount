@@ -16,7 +16,7 @@ class DistrictRepository
     @filepath = filepath
 
     @district_data = FileIO.get_data(filepath)
-
+    
     MasterParser.names(@district_data).each do |name|
       add_new_instance(name)
     end
