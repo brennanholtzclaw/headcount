@@ -8,10 +8,10 @@ class EnrollmentRepository
   attr_reader :enrollments, :location, :parser, :filepath
 
   def load_data(filepath)
-    @filepath = filepath
+    @filepath = filepath[:enrollment]
     @enrollments = {}
     @parser = Parser.new
-    @parser.read_file(filepath)
+    @parser.read_file(@filepath)
 
     store_enrollment_instances
   end
@@ -25,7 +25,7 @@ class EnrollmentRepository
 
       district = name.downcase
 
-      @enrollments[district] = Enrollment.new(@instantiation_data)
+      @enrollments[district] = Enrollment.new(@parser.all_data(district))
     end
   end
 
@@ -36,4 +36,5 @@ class EnrollmentRepository
       @enrollments[district.downcase]
     end
   end
+
 end

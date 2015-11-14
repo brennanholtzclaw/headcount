@@ -29,6 +29,7 @@ class MasterParser
   def self.flattened_data(dataset, district)
     districts_data = {}
 
+
     dataset.each do |line|
       if line["Location"].downcase == district.downcase
         if districts_data == {}
@@ -39,6 +40,7 @@ class MasterParser
         end
       end
     end
+
     districts_data[:data]
   end
 

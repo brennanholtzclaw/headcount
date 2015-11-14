@@ -43,4 +43,8 @@ class EnrollmentTest < Minitest::Test
     assert_nil e.kindergarten_participation_in_year("1998")
   end
 
+  def test_it_returns_graduation_rate_by_year_for_single_district
+skip
+  end
+
 end

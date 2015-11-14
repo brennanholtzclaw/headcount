@@ -16,13 +16,13 @@ class HeadcountAnalystTest < Minitest::Test
 
   def test_it_accepts_district_repository
     create_district_repo_and_hc_analyst
-
+# binding.pry
     assert ha.master_repo
   end
 
   def test_it_finds_a_districts_enrollment_numbers
     create_district_repo_and_hc_analyst
-    expected = {"2010"=>0.436, "2011"=>0.489, "2012"=>0.479, "2013"=>0.488, "2014"=>0.49}
+    expected = {2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}
 
     assert_equal expected, ha.find_all_data("Academy 20")
   end
@@ -46,13 +46,13 @@ class HeadcountAnalystTest < Minitest::Test
   def test_finds_years_two_districts_have_data
     create_district_repo_and_hc_analyst
 
-    assert_equal %w(2010 2011 2012 2013 2014), ha.years_with_data("academy 20", "colorado")
+    assert_equal [2010, 2011, 2012, 2013, 2014], ha.years_with_data("academy 20", "colorado")
   end
 
   def test_finds_rate_in_years_two_districts_have_data
     create_district_repo_and_hc_analyst
 
-    expected = {"2010"=>2.294, "2011"=>2.045, "2012"=>2.088, "2013"=>2.045, "2014"=>2.041}
+    expected = {2010=>2.294, 2011=>2.045, 2012=>2.088, 2013=>2.045, 2014=>2.041}
 
     assert_equal expected, ha.kindergarten_participation_rate_variation_trend('Adams County 14', :against => 'academy 20')
   end

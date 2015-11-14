@@ -12,6 +12,12 @@ class Enrollment
   end
 
   def kindergarten_participation_in_year(year)
-      data[:kindergarten_participation][year]
+    # binding.pry
+    data[:kindergarten_participation][year]
   end
+
+  def graduation_rate_by_year
+
+  end
+
 end

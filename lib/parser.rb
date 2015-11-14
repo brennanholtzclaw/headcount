@@ -16,20 +16,21 @@ class Parser
   def flatten_data
     @csv.readlines.each do |data|
       if @kg_participation[data["Location"].downcase].nil?
-        @kg_participation[data["Location"].downcase] = {data["TimeFrame"]=>data["Data"].to_f.round(3)}
+        @kg_participation[data["Location"].downcase] = {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}
 
       else
-        @kg_participation[data["Location"].downcase][data["TimeFrame"]] = data["Data"].to_f.round(3)
+        @kg_participation[data["Location"].downcase][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
       end
     end
-  end
-
-  def pretty_data(district)
-    pretty = {}
-    pretty = {name: district.upcase, kindergarten_participation: @kg_participation[district.downcase]}
   end
 
   def dataset_label
     "kindergarten_participation"
   end
+
+  def all_data(district)
+    pretty = {}
+    pretty = {:name => district.upcase, :kindergarten_participation => @kg_participation[district.downcase]}
+  end
+
 end
