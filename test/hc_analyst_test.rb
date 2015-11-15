@@ -4,7 +4,7 @@ require 'minitest/pride'
 require './lib/hc_analyst'
 
 class HeadcountAnalystTest < Minitest::Test
-  attr_reader :dr, :ha
+  attr_reader :dr, :ha, :dr2
 
   def create_district_repo_and_hc_analyst
     @dr = DistrictRepository.new
@@ -14,8 +14,18 @@ class HeadcountAnalystTest < Minitest::Test
     @ha = HeadcountAnalyst.new(dr)
   end
 
+  def create_district_repo_and_hc_analyst_with_multiple_files
+    @dr2 = DistrictRepository.new
+    @dr2.load_data( {:enrollment => {
+                    :kindergarten => "./test/data/district_test_fixture.csv",
+                    :high_school_graduation => "/test/data/high_school_grad_sample.csv"}})
+
+    @ha = HeadcountAnalyst.new(dr)
+  end
+
   def test_it_accepts_district_repository
     create_district_repo_and_hc_analyst
+
     assert ha.master_repo
   end
 
@@ -54,6 +64,13 @@ class HeadcountAnalystTest < Minitest::Test
     expected = {2010=>2.294, 2011=>2.045, 2012=>2.088, 2013=>2.045, 2014=>2.041}
 
     assert_equal expected, ha.kindergarten_participation_rate_variation_trend('Adams County 14', :against => 'academy 20')
+  end
+
+
+  def test_it_compares_participation_against_high_school_graduation
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    assert_equal 1.234, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
   end
 
 end

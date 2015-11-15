@@ -16,13 +16,47 @@ class DistrictRepository
     @filepath = filepath
 
     @district_data = FileIO.get_data(filepath)
-    
+
     MasterParser.names(@district_data).each do |name|
       add_new_instance(name)
     end
 
     make_enrollment_repo(filepath)
   end
+
+  # District Repository
+  # passes multiple sets of parsed data to enrollment instance
+  # passes long, ugly, hashed-up, filepath to fileIO (maybe slightly simplified)
+  # gets back a hash of label:handles (parser loves to accept this format)
+  #
+  # passes label=> handle to MasterPrser (ALL AT ONCE)
+  # get back a array of unique names
+  #
+  # create an enrollment repo. Passes long, ugly, hashed-up file path to ER
+  #
+  # FileIO
+  # produce a csv handle
+  # return hash (label:handle} with just one or multiple pairs
+  #
+  #
+  # Enrollment Repo
+  # initialized with long, ugly, hashed-up, filepath
+  # prepare label:handles hash with fileIO to send to parser
+  # initialized with parser(label:handle hash)
+  #
+  # passes long, ugly, hashed-up, filepath to fileIO (maybe slightly simplified)
+  # gets back a hash of label:handles (parser loves to accept this format)
+  #
+  # passes district_name to parser
+  # receives pretty data from parser
+  #
+  # iterates through the loop of names,
+  # sets name as key, instantiates Enrollment object with district’s pretty data
+  #
+  # Parser
+  # accepts label: handle hash
+  # prepares pretty data according to district name
+
 
   def make_enrollment_repo(filepath)
     if filepath.fetch(:enrollment)

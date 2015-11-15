@@ -4,7 +4,12 @@ require_relative 'enrollment_repository'
 require_relative 'file_io'
 
 class Parser
-  attr_reader :data_location, :file, :extracted_data, :kg_participation, :district
+  attr_reader :data_location, :file, :extracted_data, :kg_participation, :district, :lable_handle_hash
+
+  def initialize(hash)
+    @label_handle_hash = hash
+  end
+
 
   def read_file(filepath)
     @kg_participation = {}
@@ -29,6 +34,7 @@ class Parser
   end
 
   def all_data(district)
+      @label_handle_hash
     pretty = {}
     pretty = {:name => district.upcase, :kindergarten_participation => @kg_participation[district.downcase]}
   end

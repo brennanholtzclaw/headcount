@@ -40,4 +40,9 @@ attr_reader :master_repo
     end
     hash
   end
+
+  def kindergarten_participation_against_high_school_graduation(district)
+
+  end
+
 end
