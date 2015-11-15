@@ -68,6 +68,7 @@ class HeadcountAnalystTest < Minitest::Test
 
 
   def test_it_compares_participation_against_high_school_graduation
+    skip
     create_district_repo_and_hc_analyst_with_multiple_files
 
     assert_equal 1.234, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')

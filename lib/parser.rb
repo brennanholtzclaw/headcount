@@ -6,7 +6,7 @@ require_relative 'file_io'
 class Parser
   attr_reader :data_location, :file, :extracted_data, :kg_participation, :district, :lable_handle_hash
 
-  def initialize(hash)
+  def initialize(hash=nil)
     @label_handle_hash = hash
   end
 

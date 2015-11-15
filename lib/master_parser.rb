@@ -26,9 +26,12 @@ class MasterParser
     values
   end
 
+  def self.all_uniq_names(data_handles)
+
+  end
+
   def self.flattened_data(dataset, district)
     districts_data = {}
-
 
     dataset.each do |line|
       if line["Location"].downcase == district.downcase

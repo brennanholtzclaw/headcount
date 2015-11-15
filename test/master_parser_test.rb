@@ -23,11 +23,33 @@ class MasterParserTest < Minitest::Test
     assert_equal 34, MasterParser.values(@fixture_data).length
   end
 
-
   def test_it_returns_related_data_for_a_single_district
     expected = {2010 => 0.436, 2011 => 0.489, 2012 => 0.479, 2013 => 0.488, 2014 => 0.490}
     assert_equal expected, MasterParser.flattened_data(@fixture_data,"Academy 20")
   end
+
+  def test_it_captures_names_from_a_given_file
+
+  end 
+
+# # give it a file handle, it returns unique list of names
+#   defines an empty names array
+#   reads csv
+#     pulls name from each row, shovels into names list
+#
+# # stores multiple arrays
+#   defines an empty names_arrays array
+#   shovels names_array into names_array each time it reads a file
+#
+# # takes
+#   flattens those arrays so they become one array
+#   returns array of unique names
+
+
+
+
+
+
 
 end
 
