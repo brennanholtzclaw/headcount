@@ -16,7 +16,6 @@ class HeadcountAnalystTest < Minitest::Test
 
   def test_it_accepts_district_repository
     create_district_repo_and_hc_analyst
-# binding.pry
     assert ha.master_repo
   end
 
