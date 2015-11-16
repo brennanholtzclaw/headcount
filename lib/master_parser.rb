@@ -5,7 +5,7 @@ class MasterParser
   def self.names(data)
     names = []
     data.each do |line|
-      names << line["Location"]
+      names << line["Location"].upcase
     end
     names.uniq
   end
@@ -26,20 +26,25 @@ class MasterParser
     values
   end
 
-  def self.files(nested_filepaths)
-    if nested_filepaths.nil?
-      []
+  def self.files(nested_filepaths, category=:all)
+    return [] if nested_filepaths.nil?
+
+    file_list = []
+    if category == :all
+      nested_filepaths.keys.each do |key|
+        file_list += nested_filepaths[key].values
+      end
     else
-      nested_filepaths.values[0].values
+      file_list = nested_filepaths[category].values
     end
+    file_list
   end
 
-  def self.all_uniq_names(nested_filepaths=nil)
+  def self.all_uniq_names(nested_filepaths=nil,category=:all)
     names_array = []
-    files(nested_filepaths).each do |file|
-      names_array += names(CSV.open(file, headers: true))
+    files(nested_filepaths, category).each do |file|
+      names_array += names(FileIO.get_data(file))
     end
-
     names_array.uniq
   end
 
@@ -56,7 +61,6 @@ class MasterParser
         end
       end
     end
-
     districts_data[:data]
   end
 

@@ -3,18 +3,7 @@ require_relative 'parser'
 
 class FileIO
 
-  # def self.get_data(filepath)
-  #   if filepath[:enrollment]
-  #     file = filepath.fetch(:enrollment).fetch(:kindergarten)
-  #   else
-  #     file = filepath.fetch(:kindergarten)
-  #     end
-  #   CSV.open(file, headers: true)
-  # end
-
-  def self.get_data(filepath, *)
-    csv = CSV.open(filepath, headers: true)
+  def self.get_data(filepath)
+    CSV.open(filepath, headers: true)
   end
-
-
 end

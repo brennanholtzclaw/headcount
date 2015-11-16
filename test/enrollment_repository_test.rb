@@ -18,10 +18,21 @@ class EnrollmentRepositoryTest < Minitest::Test
     @er.load_data({:enrollment=>{:kindergarten=>"./test/data/kindergarten_enrollment_sample.csv"}})
   end
 
+  def create_and_setup_enrollment_repository_w_2_files
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+        :high_school_graduation => "./test/data/high_school_grad_sample.csv"
+        }
+        })
+    er
+  end
+
   def test_it_extracts_a_file_location
     create_and_setup_enrollment_repository
 
-    assert_equal "./test/data/kindergarten_enrollment_sample.csv", er.filepath[:kindergarten]
+    assert_equal "./test/data/kindergarten_enrollment_sample.csv", er.filepath[:enrollment][:kindergarten]
   end
 
   def test_it_stores_districts
@@ -47,29 +58,18 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_it_can_extract_filepath_from_second_file_passed_in
-    er = EnrollmentRepository.new
-    er.load_data({
-      :enrollment => {
-        :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
-        :high_school_graduation => "./test/data/high_school_grad_sample.csv"
-      }
-    })
+    er = create_and_setup_enrollment_repository_w_2_files
 
-    assert_equal "./test/data/kindergarten_enrollment_sample.csv" , er.filepath[:kindergarten]
-    assert_equal "./test/data/high_school_grad_sample.csv", er.filepath[:high_school_graduation]
+    assert_equal "./test/data/kindergarten_enrollment_sample.csv" , er.filepath[:enrollment][:kindergarten]
+    assert_equal "./test/data/high_school_grad_sample.csv", er.filepath[:enrollment][:high_school_graduation]
     end
 
-    def test_it_can_parse_data_from_second_file
-      er = EnrollmentRepository.new
-      er.load_data({
-        :enrollment => {
-          :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
-          :high_school_graduation => "./test/data/high_school_grad_sample.csv"
-        }
-      })
+    def test_it_prepares_data_in_format_parser_can_accept
+      er = create_and_setup_enrollment_repository_w_2_files
+
       expected = {:kindergarten => "./test/data/kindergarten_enrollment_sample.csv", :high_school_graduation => "./test/data/high_school_grad_sample.csv"}
 
-      assert_equal expected, er.filepath
+      assert_equal expected, er.filepath[:enrollment]
     end
 
 end

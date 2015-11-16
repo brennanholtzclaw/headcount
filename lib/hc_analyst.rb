@@ -10,7 +10,7 @@ attr_reader :master_repo
   end
 
   def find_all_data(district)
-    @master_repo.er.parser.kg_participation[district.downcase]
+    @master_repo.er.enrollments[district.downcase].data[district.downcase][:kindergarten]
   end
 
   def average(district)
