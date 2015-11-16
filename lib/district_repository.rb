@@ -15,7 +15,7 @@ class DistrictRepository
   def load_data(nested_filepaths)
     @nested_filepaths = nested_filepaths
     data_handles = FileIO.get_data(nested_filepaths)
-    all_names = MasterParser.names(data_handles)
+    all_names = MasterParser.all_uniq_names(nested_filepaths)
 
     populate_district_repo(all_names)
 

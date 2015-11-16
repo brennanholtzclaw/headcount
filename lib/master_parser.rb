@@ -26,8 +26,21 @@ class MasterParser
     values
   end
 
-  def self.all_uniq_names(data_handles)
+  def self.files(nested_filepaths)
+    if nested_filepaths.nil?
+      []
+    else
+      nested_filepaths.values[0].values
+    end
+  end
 
+  def self.all_uniq_names(nested_filepaths=nil)
+    names_array = []
+    files(nested_filepaths).each do |file|
+      names_array += names(CSV.open(file, headers: true))
+    end
+
+    names_array.uniq
   end
 
   def self.flattened_data(dataset, district)

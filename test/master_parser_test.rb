@@ -28,37 +28,24 @@ class MasterParserTest < Minitest::Test
     assert_equal expected, MasterParser.flattened_data(@fixture_data,"Academy 20")
   end
 
-  def test_it_captures_names_from_a_given_file
+  def test_it_prepares_list_of_file_ext_from_nested_filepaths
+    nested_filepaths = {  :enrollment => {
+                          :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+                          :high_school_graduation => "./test/data/high_school_grad_sample.csv"}}
+    assert_equal ["./test/data/kindergarten_enrollment_sample.csv", "./test/data/high_school_grad_sample.csv"], MasterParser.files(nested_filepaths)
+  end
 
-  end 
+  def test_it_creates_list_of_unique_names_from_all_files
+    nested_filepaths = {  :enrollment => {
+                          :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+                          :high_school_graduation => "./test/data/high_school_grad_sample.csv"}}
+    expected = ["Colorado", "ACADEMY 20", "ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12"]
 
-# # give it a file handle, it returns unique list of names
-#   defines an empty names array
-#   reads csv
-#     pulls name from each row, shovels into names list
-#
-# # stores multiple arrays
-#   defines an empty names_arrays array
-#   shovels names_array into names_array each time it reads a file
-#
-# # takes
-#   flattens those arrays so they become one array
-#   returns array of unique names
+    assert_equal expected, MasterParser.all_uniq_names(nested_filepaths)
+  end
 
-
-
-
-
-
+  def test_it_returns_empty_array_if_no_files_given
+    assert_equal [], MasterParser.all_uniq_names()
+  end
 
 end
-
-
-# if I give it one row from a file, I want it to return name
-# if I give it one row from a file, I want it to return year
-# if I give it one row from a file, I want it to return dataformat
-# if I give it one row from a file, I want it to return data
-#
-# if i give it a whole file and district, I want it to return data for the range of years available
-#
-# if i give it a whole file and year, I want it to return data for the hash of districts with data in that year available
