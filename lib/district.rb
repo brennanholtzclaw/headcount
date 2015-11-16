@@ -6,7 +6,7 @@ class District
   end
 
   def name
-    @district[:district].upcase
+    @district[:name].upcase
   end
 
 end

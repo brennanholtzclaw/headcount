@@ -14,7 +14,7 @@ class DistrictRepository
 
   def load_data(nested_filepaths)
     @nested_filepaths = nested_filepaths
-    
+
     all_names = MasterParser.all_uniq_names(nested_filepaths)
 
     populate_district_repo(all_names)
@@ -30,7 +30,7 @@ class DistrictRepository
   end
 
   def add_new_instance(name)
-    @district_repo[name] = District.new(name)
+    @district_repo[name] = District.new({:name => name})
   end
 
   def instantiate_enrollment_repo(nested_filepaths)
