@@ -1,58 +1,60 @@
 require './lib/district'
 require './lib/enrollment_repository'
+require './lib/file_io'
 require 'csv'
 require 'pry'
 
 class DistrictRepository
-  attr_reader :district, :years, :data_format, :data
-  attr_accessor :district_repo, :enrollment_repo, :er
+  attr_reader :nested_filepaths
+  attr_accessor :district_repo, :er
 
   def initialize
     @district_repo = {}
-    # @enrollment_repo = {}
   end
 
-  def load_data(filepath)
-    @file_path = filepath.fetch(:enrollment).fetch(:kindergarten)
-    CSV.open(@file_path, headers: true).each do |data|
-      @district_repo[data["Location"]] = District.new(data["Location"])
-      #     row_data = {district:     data["Location"],
-      #                 years:        data["TimeFrame"],
-      #                 data_format:  data["DataFormat"],
-      #                 data:         data["Data"]}
-      # @enrollment_repo[data["Location"]] = Enrollment.new(row_data)
+  def load_data(nested_filepaths)
+    @nested_filepaths = nested_filepaths
+    data_handles = FileIO.get_data(nested_filepaths)
+    all_names = MasterParser.all_uniq_names(nested_filepaths)
+
+    populate_district_repo(all_names)
+
+    instantiate_enrollment_repo(nested_filepaths)
+  end
+
+  def populate_district_repo(all_names)
+    all_names = all_names.map(&:upcase)
+    all_names.each do |name|
+      add_new_instance(name)
     end
-    if filepath.fetch(:enrollment)
+  end
+
+  def add_new_instance(name)
+    @district_repo[name] = District.new(name)
+  end
+
+  def instantiate_enrollment_repo(nested_filepaths)
+    if nested_filepaths[:enrollment]
       @er = EnrollmentRepository.new
-      @er.load_data(filepath)
-    end
-    # binding.pry
-  end
-
-  def find_by_name(district_name)
-    if @district_repo.include?(district_name.upcase)
-        @district_repo[district_name.upcase]
+      @er.load_data(nested_filepaths)
     else
-      nil #is there an enumerable that returns nil?
+      nil
     end
   end
 
-  def find_all_matching(district_name)
-     @district_repo.keys.select {|dist| dist.include?(district_name.upcase)}
+  def find_by_name(name)
+    if @district_repo.include?(name.upcase)
+        @district_repo[name.upcase]
+    else
+      nil
+    end
+  end
+
+  def find_all_matching(name)
+     @district_repo.keys.select {|dist| dist.include?(name.upcase)}
   end
 
   def find_all
     @district_repo.keys
   end
 end
-
-# def load_data(filepath)
-#   CSV.open(filepath, headers: true).each do |data|
-#     row_data = {district:     data["Location"],
-#                 years:        data["TimeFrame"],
-#                 data_format:  data["DataFormat"],
-#                 data:         data["Data"]}
-#
-#     @district_repo[data["Location"]] = District.new(row_data)
-#   end
-# end

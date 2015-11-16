@@ -1,14 +1,19 @@
 require 'csv'
 require 'pry'
-require_relative 'kindergarten_participation'
 require_relative 'enrollment_repository'
+require_relative 'file_io'
 
 class Parser
-  attr_reader :data_location, :file, :extracted_data, :kg_participation, :district
+  attr_reader :data_location, :file, :extracted_data, :kg_participation, :district, :lable_handle_hash
 
-  def read_file(file)
+  def initialize(hash=nil)
+    @label_handle_hash = hash
+  end
+
+
+  def read_file(filepath)
     @kg_participation = {}
-    @csv = CSV.open(file, headers: true)
+    @csv = FileIO.get_data(filepath)
 
     flatten_data
   end
@@ -16,25 +21,22 @@ class Parser
   def flatten_data
     @csv.readlines.each do |data|
       if @kg_participation[data["Location"].downcase].nil?
-        @kg_participation[data["Location"].downcase] = {data["TimeFrame"]=>data["Data"].to_f.round(3)}
+        @kg_participation[data["Location"].downcase] = {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}
 
       else
-        @kg_participation[data["Location"].downcase][data["TimeFrame"]] = data["Data"].to_f.round(3)
+        @kg_participation[data["Location"].downcase][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
       end
     end
-  end
-
-  def pretty_data(district)
-    pretty = {}
-    pretty = {name: district.upcase, kindergarten_participation: @kg_participation[district.downcase]}
   end
 
   def dataset_label
     "kindergarten_participation"
   end
+
+  def all_data(district)
+      @label_handle_hash
+    pretty = {}
+    pretty = {:name => district.upcase, :kindergarten_participation => @kg_participation[district.downcase]}
+  end
+
 end
-
-# p = Parser.new
-# p.read_file('./test/data/kindergarten_enrollment_sample.csv')
-# puts p.pretty_data("colorado")
-

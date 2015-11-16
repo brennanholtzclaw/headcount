@@ -5,6 +5,7 @@ require 'minitest/pride'
 require_relative '../lib/enrollment_repository'
 
 class EnrollmentRepositoryTest < Minitest::Test
+  attr_reader :er
 
   def test_it_exists
     er = EnrollmentRepository.new()
@@ -12,16 +13,19 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert er
   end
 
-  def test_it_extracts_a_file_location
-    er = EnrollmentRepository.new()
-    er.load_data({:enrollment=>{:kindergarten=>"./test/data/kindergarten_enrollment_sample.csv"}})
+  def create_and_setup_enrollment_repository
+    @er = EnrollmentRepository.new()
+    @er.load_data({:enrollment=>{:kindergarten=>"./test/data/kindergarten_enrollment_sample.csv"}})
+  end
 
-    assert_equal "./test/data/kindergarten_enrollment_sample.csv", er.file_path
+  def test_it_extracts_a_file_location
+    create_and_setup_enrollment_repository
+
+    assert_equal "./test/data/kindergarten_enrollment_sample.csv", er.filepath[:kindergarten]
   end
 
   def test_it_stores_districts
-    er = EnrollmentRepository.new()
-    er.load_data({:enrollment=>{:kindergarten=>"./test/data/kindergarten_enrollment_sample.csv"}})
+    create_and_setup_enrollment_repository
 
     assert er.enrollments["colorado"]
     refute er.enrollments["ohio"]
@@ -29,19 +33,43 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_it_stores_enrollment_instances
-    er = EnrollmentRepository.new()
-    er.load_data({:enrollment=>{:kindergarten=>"./test/data/kindergarten_enrollment_sample.csv"}})
+    create_and_setup_enrollment_repository
 
     assert_equal "#<Enrollment:", er.enrollments["colorado"].to_s[0,13]
   end
 
   def test_it_finds_instances_by_name
-    er = EnrollmentRepository.new()
-    er.load_data({:enrollment=>{:kindergarten=>"./test/data/kindergarten_enrollment_sample.csv"}})
+    create_and_setup_enrollment_repository
 
     assert er.find_by_name("Academy 20")
-    refute er.find_by_name("Test District")
-    assert_equal "#<Enrollment:", er.find_by_name("Academy 20").to_s[0,13]
+    # refute er.find_by_name("Test District")
+    # assert_equal "#<Enrollment:", er.find_by_name("Academy 20").to_s[0,13]
   end
+
+  def test_it_can_extract_filepath_from_second_file_passed_in
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+        :high_school_graduation => "./test/data/high_school_grad_sample.csv"
+      }
+    })
+
+    assert_equal "./test/data/kindergarten_enrollment_sample.csv" , er.filepath[:kindergarten]
+    assert_equal "./test/data/high_school_grad_sample.csv", er.filepath[:high_school_graduation]
+    end
+
+    def test_it_can_parse_data_from_second_file
+      er = EnrollmentRepository.new
+      er.load_data({
+        :enrollment => {
+          :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+          :high_school_graduation => "./test/data/high_school_grad_sample.csv"
+        }
+      })
+      expected = {:kindergarten => "./test/data/kindergarten_enrollment_sample.csv", :high_school_graduation => "./test/data/high_school_grad_sample.csv"}
+
+      assert_equal expected, er.filepath
+    end
 
 end
