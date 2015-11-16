@@ -12,7 +12,7 @@ class Parser
   :label_handle_hash,
   :parser_data
 
-  def initialize(hash)
+  def initialize(hash=nil)
     @label_handle_hash = hash
   end
 

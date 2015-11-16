@@ -25,6 +25,7 @@ class ParserTest < Minitest::Test
   def test_it_initiates_with_a_hash_of_label_handle_pairs
     skip
    parser = Parser.new({:enrollment => {:kindergarten => "./test/data/district_test_fixture.csv"}})
+
   #  expected = {:name=>"COLORADO",
   #          :kindergarten_participation=>{
   #            2007=>0.39465, 2006=>0.33677,

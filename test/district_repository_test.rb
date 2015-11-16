@@ -71,7 +71,7 @@ class DistrictRepositoryTest < Minitest::Test
   def test_find_all_lists_array_of_unique_districts
     create_and_load_district_repository
 
-    expectation = ["Colorado", "ACADEMY 20", "ADAMS COUNTY 14", "BIG SANDY 100J", "CHERAW 31", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12", "CLEAR CREEK RE-1", "COLORADO SPRINGS 11", "COTOPAXI RE-3", "CREEDE CONSOLIDATED 1", "CRIPPLE CREEK-VICTOR RE-1", "CROWLEY COUNTY RE-1-J", "CUSTER COUNTY SCHOOL DISTRICT C-1"]
+    expectation = ["COLORADO", "ACADEMY 20", "ADAMS COUNTY 14", "BIG SANDY 100J", "CHERAW 31", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12", "CLEAR CREEK RE-1", "COLORADO SPRINGS 11", "COTOPAXI RE-3", "CREEDE CONSOLIDATED 1", "CRIPPLE CREEK-VICTOR RE-1", "CROWLEY COUNTY RE-1-J", "CUSTER COUNTY SCHOOL DISTRICT C-1"]
 
     assert_equal expectation, dr.find_all
     assert_equal 14, dr.find_all.count
@@ -82,4 +82,57 @@ class DistrictRepositoryTest < Minitest::Test
 
     assert dr.er.enrollments.length > 5
   end
+
+  def test_it_adds_new_instances
+    dr_test = DistrictRepository.new
+    dr_test.add_new_instance("COLORADO")
+    dr_test.add_new_instance("A")
+    dr_test.add_new_instance("B")
+    dr_test.add_new_instance("C")
+
+    assert_equal 4, dr_test.district_repo.length
+    assert_equal "#<District:", dr_test.district_repo["COLORADO"].to_s[0,11]
+    assert_equal "#<District:", dr_test.district_repo["A"].to_s[0,11]
+    assert_equal "#<District:", dr_test.district_repo["B"].to_s[0,11]
+    assert_equal "#<District:", dr_test.district_repo["C"].to_s[0,11]
+  end
+
+  def test_it_instantiates_enrollment_repo_if_filepath_contains_enrollment_datasets
+    create_and_load_district_repository
+    filepath = { :enrollment => {
+                 :kindergarten => "./test/data/district_test_fixture.csv"}}
+    dr.instantiate_enrollment_repo(filepath)
+
+    assert dr.er
+  end
+
+  def test_it_does_not_instantiates_enrollment_repo_if_filepath_does_not_contain_enrollment_datasets
+    create_and_load_district_repository
+    filepath = { :testing => {
+                 :kindergarten => "./test/data/district_test_fixture.csv"}}
+    dr.instantiate_enrollment_repo(filepath)
+
+    assert dr.er
+  end
+
+  def test_it_populates_district_repo_with_multiple_pairs
+    dr_test = DistrictRepository.new
+    names = ["LARRY","CURLY","MOE"]
+    dr_test.populate_district_repo(names)
+
+    assert_equal "#<District:", dr_test.district_repo["LARRY"].to_s[0,11]
+    assert_equal "#<District:", dr_test.district_repo["CURLY"].to_s[0,11]
+    assert_equal "#<District:", dr_test.district_repo["MOE"].to_s[0,11]
+  end
+
+  def test_it_populates_district_repo_with_multiple_pairs_case_insensitive
+    dr_test = DistrictRepository.new
+    names = ["LARRY","curly","Moe"]
+    dr_test.populate_district_repo(names)
+
+    assert_equal "#<District:", dr_test.district_repo["LARRY"].to_s[0,11]
+    assert_equal "#<District:", dr_test.district_repo["CURLY"].to_s[0,11]
+    assert_equal "#<District:", dr_test.district_repo["MOE"].to_s[0,11]
+  end
+
 end
