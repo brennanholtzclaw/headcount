@@ -51,10 +51,10 @@ class EnrollmentRepositoryTest < Minitest::Test
 
   def test_it_finds_instances_by_name
     create_and_setup_enrollment_repository
+    expected = '#<Enrollment:0xXXXXXX @data={"academy 20"=>{:kindergarten=>{2007=>0.392, 2006=>0.354, 2005=>0.267, 2004=>0.302, 2008=>0.385, 2009=>0.39, 2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}}}>'
 
-    assert er.find_by_name("Academy 20")
-    # refute er.find_by_name("Test District")
-    # assert_equal "#<Enrollment:", er.find_by_name("Academy 20").to_s[0,13]
+    assert_equal "#<Enrollment:", er.find_by_name("Academy 20").to_s[0,13]
+    assert_equal "#<Enrollment:", er.find_by_name("ACADEMY 20").to_s[0,13]
   end
 
   def test_it_can_extract_filepath_from_second_file_passed_in
