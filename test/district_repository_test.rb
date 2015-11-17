@@ -135,4 +135,31 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal "#<District:", dr_test.district_repo["MOE"].to_s[0,11]
   end
 
+  def create_and_load_district_repository_with_2_files
+    dr2 = DistrictRepository.new
+    dr2.load_data({ :enrollment => {
+                    :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+                    :high_school_graduation => "./test/data/high_school_grad_sample.csv"}})
+    dr2
+  end
+
+  def test_it_loads_files_and_creates_approp_number_of_district_instances
+    dr_2 = create_and_load_district_repository_with_2_files
+
+    assert_equal 6, dr_2.district_repo.count
+  end
+
+  def test_it_loads_files_and_creates_approp_number_of_enrollment_instances
+    dr_2 = create_and_load_district_repository_with_2_files
+
+    assert_equal 6, dr_2.er.enrollments.count
+  end
+
+  def test_it_loads_files_and_populates_enrollment_instances_with_data
+    dr_2 = create_and_load_district_repository_with_2_files
+
+    assert_equal 11, dr_2.er.enrollments["academy 20"].data["academy 20"][:kindergarten].count
+    assert_equal 5, dr_2.er.enrollments["academy 20"].data["academy 20"][:high_school_graduation].count
+  end
+
 end

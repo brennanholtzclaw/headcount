@@ -4,7 +4,7 @@ require 'minitest/pride'
 require './lib/hc_analyst'
 
 class HeadcountAnalystTest < Minitest::Test
-  attr_reader :dr, :ha, :dr2
+  attr_reader :dr, :ha, :dr2, :hca
 
   def create_district_repo_and_hc_analyst
     @dr = DistrictRepository.new
@@ -16,14 +16,21 @@ class HeadcountAnalystTest < Minitest::Test
 
   def create_district_repo_and_hc_analyst_with_multiple_files
     @dr2 = DistrictRepository.new
-
     @dr2.load_data( {:enrollment => {
                     :kindergarten => "./test/data/district_test_fixture.csv",
                     :high_school_graduation => "./test/data/high_school_grad_sample.csv"}})
 
-
-    @ha = HeadcountAnalyst.new(dr)
+    @hca = HeadcountAnalyst.new(@dr2)
   end
+
+  # def create_and_load_district_repository_with_2_files
+  #   dr2 = DistrictRepository.new
+  #   dr2.load_data({ :enrollment => {
+  #                   :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+  #                   :high_school_graduation => "./test/data/high_school_grad_sample.csv"}})
+  #   dr2
+  # end
+  #
 
   def test_it_accepts_district_repository
     create_district_repo_and_hc_analyst
@@ -35,15 +42,15 @@ class HeadcountAnalystTest < Minitest::Test
     create_district_repo_and_hc_analyst
     expected = {2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}
 
-    assert_equal expected, ha.find_all_data("Academy 20")
+    assert_equal expected, ha.find_all_data("Academy 20",:kindergarten)
   end
 
   def test_average_finds_average_of_all_years_available_in_data
     create_district_repo_and_hc_analyst
 
-    assert_equal 0.476, ha.average("academy 20")
-    assert_equal 0.69, ha.average("colorado")
-    assert_equal 1.0, ha.average("adams county 14")
+    assert_equal 0.476, ha.average("academy 20", :kindergarten)
+    assert_equal 0.69, ha.average("colorado", :kindergarten)
+    assert_equal 1.0, ha.average("adams county 14", :kindergarten)
   end
 
   def test_average_finds_variation_between_two_districts
@@ -57,7 +64,7 @@ class HeadcountAnalystTest < Minitest::Test
   def test_finds_years_two_districts_have_data
     create_district_repo_and_hc_analyst
 
-    assert_equal [2010, 2011, 2012, 2013, 2014], ha.years_with_data("academy 20", "colorado")
+    assert_equal [2010, 2011, 2012, 2013, 2014], ha.years_with_data("academy 20", "colorado", :kindergarten)
   end
 
   def test_finds_rate_in_years_two_districts_have_data
@@ -68,12 +75,23 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal expected, ha.kindergarten_participation_rate_variation_trend('Adams County 14', :against => 'academy 20')
   end
 
-
-  def test_it_compares_participation_against_high_school_graduation
-    skip
+  def test_it_provides_districts_kg_participation_rate_var_against_state
     create_district_repo_and_hc_analyst_with_multiple_files
 
-    assert_equal 1.234, ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+    assert_equal 0.69, hca.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+  end
+
+  def test_it_provides_high_school_graduation_rate_variance_vs_state
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    assert_equal 1.194, hca.high_school_graduation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+  end
+
+  def test_it_compares_kg_and_hs_rates
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    assert_equal 0.578, hca.kindergarten_participation_against_high_school_graduation('Academy 20')
+    assert_equal 0.578, hca.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
   end
 
 end

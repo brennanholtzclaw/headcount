@@ -14,11 +14,8 @@ class DistrictRepository
 
   def load_data(nested_filepaths)
     @nested_filepaths = nested_filepaths
-
     all_names = MasterParser.all_uniq_names(nested_filepaths)
-
     populate_district_repo(all_names)
-
     instantiate_enrollment_repo(nested_filepaths)
   end
 

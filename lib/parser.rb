@@ -22,7 +22,8 @@ class Parser
     filepath[:enrollment].each do |label_x, file|
       a = reads_file_and_returns_1_districts_data_for_one_file(district,label_x,file)
 
-      if @parser_data == {}
+      if a == {}
+      elsif @parser_data == {}
         @parser_data = a
       else
         @parser_data[district.downcase][a[district.downcase].keys[0]] = a[district.downcase].values[0]

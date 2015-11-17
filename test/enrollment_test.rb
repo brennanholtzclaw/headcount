@@ -20,22 +20,11 @@ class EnrollmentTest < Minitest::Test
   end
 
   def instantiate_enrollment_with_highschool_and_kindergarten_data
-    data_high_school = {:name=>"COLORADO",
-            :kindergarten_participation=>{
-              2007=>0.39465, 2006=>0.33677,
-              2005=>0.27807, 2004=>0.24014,
-              2008=>0.5357, 2009=>0.598,
-              2010=>0.64019, 2011=>0.672,
-              2012=>0.695, 2013=>0.70263,
-              2014=>0.74118},
-            :high_school_graduation=>{
-              2010 => 0.895,
-              2011 => 0.895,
-              2012 => 0.889,
-              2013 => 0.913,
-              2014 => 0.898,
-              }}
-    @e_high_school = Enrollment.new(data_high_school)
+    er = EnrollmentRepository.new
+    er.load_data({:enrollment => {
+                  :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+                  :high_school_graduation => "./test/data/high_school_grad_sample.csv"}})
+    er
   end
 
   def test_it_is_initialized_with_data
@@ -62,24 +51,20 @@ class EnrollmentTest < Minitest::Test
     assert_nil e.kindergarten_participation_in_year(1998)
   end
 
+  def test_integration_with_by_year_and_enrollment_from_spec
+    er = instantiate_enrollment_with_highschool_and_kindergarten_data
+    enrollment = er.find_by_name("ACADEMY 20")
+    expectation = {2010=>0.895, 2011=>0.895, 2012=>0.89, 2013=>0.914, 2014=>0.898}
 
-  def test_it_returns_graduation_rate_by_year_for_single_district
-    instantiate_enrollment_with_highschool_and_kindergarten_data
-
-    expectation = {2010 => 0.895,
-                  2011 => 0.895,
-                  2012 => 0.889,
-                  2013 => 0.913,
-                  2014 => 0.898,
-                  }
-
-    assert_equal expectation, @e_high_school.graduation_rate_by_year
+    assert_equal expectation, enrollment.graduation_rate_by_year
   end
 
-  def test_it_returns_graduation_rate_in_year
-    instantiate_enrollment_with_highschool_and_kindergarten_data
+  def test_integration_with_in_year_and_enrollment_from_spec
+    er = instantiate_enrollment_with_highschool_and_kindergarten_data
+    enrollment = er.find_by_name("ACADEMY 20")
+    expectation = 0.914
 
-    assert_equal 0.913, @e_high_school.graduation_rate_in_year(2013)
+    assert_equal expectation, enrollment.graduation_rate_in_year(2013)
   end
 
 end
