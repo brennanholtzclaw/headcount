@@ -48,6 +48,19 @@ class MasterParser
     names_array.uniq
   end
 
+  def self.all_common_names(files_array,category=:all)
+    names_array = []
+
+    files_array.each do |file|
+      if names_array == []
+        names_array = names(FileIO.get_data(file))
+      else
+        names_array = names_array & names(FileIO.get_data(file))
+      end
+    end
+    names_array
+  end
+
   def self.flattened_data(dataset, district)
     districts_data = {}
 

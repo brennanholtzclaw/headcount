@@ -23,15 +23,6 @@ class HeadcountAnalystTest < Minitest::Test
     @hca = HeadcountAnalyst.new(@dr2)
   end
 
-  # def create_and_load_district_repository_with_2_files
-  #   dr2 = DistrictRepository.new
-  #   dr2.load_data({ :enrollment => {
-  #                   :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
-  #                   :high_school_graduation => "./test/data/high_school_grad_sample.csv"}})
-  #   dr2
-  # end
-  #
-
   def test_it_accepts_district_repository
     create_district_repo_and_hc_analyst
 
@@ -94,4 +85,26 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal 0.578, hca.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
   end
 
+  def test_it_determines_whether_kindergarted_hs_correlation_exists
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    refute   hca.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    assert hca.kindergarten_participation_correlates_with_high_school_graduation(for: 'COLORADO')
+    assert hca.kindergarten_participation_correlates_with_high_school_graduation(for: 'COLORADO')
+  end
+
+  def test_it_finds_correlation_across_the_state
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    refute hca.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
+  end
+
+  def test_it_finds_correlation_across_the_given_list_of_districts
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    refute hca.kindergarten_participation_correlates_with_high_school_graduation(
+    :across => ['Academy 20', 'Adams County 14', 'Cheyenne County Re-5', 'Cheyenne Mountain 12'])
+    assert hca.kindergarten_participation_correlates_with_high_school_graduation(
+    :across => ['Cheyenne County Re-5', 'Cheyenne Mountain 12'])
+  end
 end

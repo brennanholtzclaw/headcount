@@ -46,7 +46,6 @@ attr_reader :master_repo
     (average(district, :high_school_graduation)/average(d2, :high_school_graduation)).round(3)
   end
 
-
   def kindergarten_participation_against_high_school_graduation(district)
     kindergarten_variation = kindergarten_participation_rate_variation(district, :against => "COLORADO")
 
@@ -55,4 +54,66 @@ attr_reader :master_repo
     (kindergarten_variation / graduation_variation).round(3)
   end
 
+  def kindergarten_participation_correlates_with_high_school_graduation(options)
+    if options[:for] == 'STATEWIDE'
+      kg_v_hs_correlation_statewide
+    elsif options[:across]
+      kg_v_hs_correlation_across_districts(options[:across])
+    else
+      district = options[:for]
+
+      kg_v_hs = kindergarten_participation_against_high_school_graduation(district)
+
+      if kg_v_hs > 0.6 && kg_v_hs < 1.5
+        true
+      else
+        false
+      end
+    end
+  end
+
+  def find_names_common_to_kg_and_hs_grad_files
+    kg_file = @master_repo.er.filepath[:enrollment][:kindergarten]
+    hs_grad_file = @master_repo.er.filepath[:enrollment][:high_school_graduation]
+
+    kg_and_hs_files = [kg_file, hs_grad_file]
+
+    MasterParser.all_common_names(kg_and_hs_files)
+  end
+
+  def kg_v_hs_correlation_statewide
+    districts = find_names_common_to_kg_and_hs_grad_files
+
+    results = districts.map do |district|
+      kindergarten_participation_correlates_with_high_school_graduation(:for => district)
+    end
+
+    count_true = results.count(true).to_f
+    count_total = results.length.to_f
+
+    percentage_true = (count_true/count_total)
+
+    if percentage_true >= 0.7
+      true
+    else
+      false
+    end
+  end
+
+  def kg_v_hs_correlation_across_districts(districts)
+    results = districts.map do |district|
+      kindergarten_participation_correlates_with_high_school_graduation(:for => district)
+    end
+
+    count_true = results.count(true).to_f
+    count_total = results.length.to_f
+
+    percentage_true = (count_true/count_total)
+
+    if percentage_true >= 0.7
+      true
+    else
+      false
+    end
+  end
 end
