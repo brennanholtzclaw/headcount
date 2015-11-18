@@ -1,5 +1,5 @@
 require 'test_helper'
-require './lib/district_repository'
+require_relative '../lib/district_repository'
 
 class DistrictRepositoryTest < Minitest::Test
   attr_reader :dr
@@ -89,7 +89,7 @@ class DistrictRepositoryTest < Minitest::Test
 
     assert_equal 4, dr_test.district_repo.length
     assert_equal "#<District:", dr_test.district_repo["COLORADO"].to_s[0,11]
-    assert_equal "#<District:", dr_test.district_repo["A"].to_s[0,11]
+    refute_equal "A",           dr_test.district_repo["A"].to_s[0,11]
     assert_equal "#<District:", dr_test.district_repo["B"].to_s[0,11]
     assert_equal "#<District:", dr_test.district_repo["C"].to_s[0,11]
   end

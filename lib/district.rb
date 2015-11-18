@@ -1,10 +1,9 @@
-require './lib/district_repository'
+require_relative 'district_repository'
 
 class District
   attr_reader :district, :enrollment_data, :testing_data
 
   def initialize(data = {})
-    # binding.pry
     @district = data[:name]
 
     if !data[:data].nil?

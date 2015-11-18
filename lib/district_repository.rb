@@ -1,7 +1,7 @@
-require './lib/district'
-require './lib/enrollment_repository'
-require './lib/file_io'
-require './lib/statewide_testing_repository'
+require_relative 'district'
+require_relative 'enrollment_repository'
+require_relative 'file_io'
+require_relative 'statewide_testing_repository'
 require 'csv'
 require 'pry'
 

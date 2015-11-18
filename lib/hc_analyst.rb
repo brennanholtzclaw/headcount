@@ -2,7 +2,7 @@ require 'csv'
 require 'pry'
 require 'bigdecimal'
 require 'bigdecimal/util'
-require './lib/district_repository'
+require_relative 'district_repository'
 
 class HeadcountAnalyst
 attr_reader :master_repo
