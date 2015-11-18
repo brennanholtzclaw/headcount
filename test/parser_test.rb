@@ -27,7 +27,7 @@ class ParserTest < Minitest::Test
   end
 
   def test_it_reads_file_and_returns_one_districts_data_for_one_file
-    parser = Parser.new("shtuff")
+    parser = Parser.new
     district = "Academy 20"
     label = :kindergarten_data
     filepath = "./test/data/district_test_fixture.csv"
@@ -37,7 +37,7 @@ class ParserTest < Minitest::Test
   end
 
   def test_it_reads_file_and_returns_one_districts_data_for_multiple_files
-    parser = Parser.new("shtuff")
+    parser = Parser.new
     district = "Academy 20"
     filepath = {:enrollment => {
                 :kindergarten => "./test/data/district_test_fixture.csv",
@@ -48,7 +48,7 @@ class ParserTest < Minitest::Test
   end
 
   def test_multiple_file_reader_doesnt_break_if_only_one_file_given
-    parser = Parser.new("shtuff")
+    parser = Parser.new
     district = "Academy 20"
     filepath = {:enrollment => {
                 :kindergarten => "./test/data/district_test_fixture.csv"}}

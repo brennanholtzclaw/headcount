@@ -4,17 +4,7 @@ require_relative 'enrollment_repository'
 require_relative 'file_io'
 
 class Parser
-  attr_reader :data_location,
-  :file,
-  :extracted_data,
-  :kg_participation,
-  :district,
-  :label_handle_hash,
-  :parser_data
-
-  def initialize(hash=nil)
-    @label_handle_hash = hash
-  end
+  attr_reader :parser_data
 
   def find_district_data_in_mult_files(district,filepath)
     @parser_data = {}
@@ -47,38 +37,4 @@ class Parser
     end
     data_group
   end
-
-  def flatten_data
-    @csv.readlines.each do |data|
-      if @kg_participation[data["Location"].downcase].nil?
-        @kg_participation[data["Location"].downcase] = {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}
-
-      else
-        @kg_participation[data["Location"].downcase][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
-      end
-    end
-  end
-
-  def flatten_highschool_grad_dataset
-    @csv.readlines.each do |data|
-      if @high_school_graduation[data["Location"].downcase].nil?
-        @high_school_graduation[data["Location"].downcase] = {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}
-
-      else
-        @high_school_graduation[data["Location"].downcase][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
-      end
-    end
-  end
-
-
-  def dataset_label
-    "kindergarten_participation"
-  end
-
-  def all_data(district)
-      @label_handle_hash
-    pretty = {}
-    pretty = {:name => district.upcase, :kindergarten_participation => @kg_participation[district.downcase]}
-  end
-
 end
