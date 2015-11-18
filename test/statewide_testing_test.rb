@@ -71,11 +71,19 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_proficient_by_grade_raises_error_if_not_fed_eighth_or_third_grades
-    skip
     st = setup_tests
 
-    assert_raises "UnknownDataError: 9 is not in our list of files."
+    assert_raises "UnknownDataError" do
       st.proficient_by_grade(9)
+    end
+  end
+
+  def test_proficient_by_race_raises_error_if_race_unknown
+    st = setup_tests
+
+    assert_raises "UnknownRaceError" do
+      st.proficient_by_race_or_ethnicity(:latino)
+    end
   end
 
   def test_it_finds_list_of_all_years_in_data
@@ -144,14 +152,13 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_it_raises_error_for_race_that_doesnt_exist_in_list
-    skip
     st = setup_tests
     expected = {2011=>{:math=>0.569, :reading=>0.745, :writing=>0.726},
                 2012=>{:math=>0.571, :reading=>0.833, :writing=>0.683},
                 2013=>{:math=>0.683, :reading=>0.867, :writing=>0.717},
                 2014=>{:math=>0.682, :reading=>0.932, :writing=>0.727}}
 
-    assert "UnknownRaceError" do
+    assert_raises "UnknownRaceError" do
       st.proficient_by_race_or_ethnicity(:foreigner)
     end
   end
@@ -163,11 +170,16 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_raises_an_error_for_an_unknown_subject
-    skip
     st = setup_tests
 
-    assert "UnknownDataError" do
-      st.proficient_for_subject_by_grade_in_year(:rithmatic, 3, 2008)
+    assert_raises "UnknownDataError" do
+      st.proficient_for_subject_by_grade_in_year(:rithmatic, 3, 2011)
+    end
+    assert_raises "UnknownDataError" do
+      st.proficient_for_subject_by_grade_in_year(:math, 4, 2011)
+    end
+    assert_raises "UnknownDataError" do
+      st.proficient_for_subject_by_grade_in_year(:math, 3, 2015)
     end
   end
 
@@ -178,13 +190,16 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_raises_an_error_for_an_unknown_grade_level
-    skip
     st = setup_tests
 
     assert "UnknownDataError" do
-      st.proficient_for_subject_by_grade_in_year(:math, 6, 2008)
+      st.proficient_for_subject_by_grade_in_year(:math, 6, 2011)
+    end
+    assert "UnknownDataError" do
+      st.proficient_for_subject_by_grade_in_year(:rithmatic, 3, 2008)
+    end
+    assert "UnknownDataError" do
+      st.proficient_for_subject_by_grade_in_year(:math, 3, 2016)
     end
   end
-
-
 end

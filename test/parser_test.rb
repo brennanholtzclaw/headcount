@@ -7,23 +7,12 @@ require_relative '../lib/parser.rb'
 class ParserTest < Minitest::Test
 
   def test_it_pulls_out_correct_data_for_enrollment_instances
-    skip
     @filepath = {:enrollment => {
                  :kindergarten => "./test/data/district_test_fixture.csv"}}
     @parser = Parser.new
-    expected = {:name=>"ACADEMY 20", :kindergarten_participation=>{2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}}
+    expected = {"academy 20"=>{:kindergarten=>{2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}}}
 
     assert_equal expected, @parser.find_district_data_in_mult_files("Academy 20", @filepath)
-  end
-
-  def test_it_initiates_with_a_hash_of_label_handle_pairs
-    skip
-    parser = Parser.new({:enrollment => {:kindergarten => "./test/data/district_test_fixture.csv"}})
-    parser.read_file({:kindergarten => "./test/data/district_test_fixture.csv"})
-
-    assert_equal Hash, parser.label_handle_hash.class
-    assert_equal Symbol, parser.label_handle_hash.keys[0].class
-    assert_equal String, parser.label_handle_hash.values[0].class
   end
 
   def test_it_reads_file_and_returns_one_districts_data_for_one_file

@@ -13,8 +13,7 @@ class StatewideTest
     elsif grade == 8
       data[:eighth_grade]
     else
-      raise "UnknownDataError",
-      "#{grade} is not in our list of files."
+      raise "UnknownDataError" #{grade} is not in our list of files."
     end
   end
 
@@ -55,6 +54,15 @@ class StatewideTest
   def proficient_by_race_or_ethnicity(race)
     years = all_race_file_years
     race_data = {}
+    races = { :asian => "Asian",
+              :black => "Black",
+              :pacific_islander => "Hawaiian/Pacific Islander",
+              :hispanic => "Hispanic",
+              :native_american => "Native American",
+              :two_or_more => "Two or More",
+              :white => "White"}
+
+    raise "UnknownRaceError" if races[race].nil?
 
     years.each do |year|
       race_data[year] = race_file_scores(race, year)
@@ -68,7 +76,10 @@ class StatewideTest
               :reading => "Reading",
               :writing => "Writing"}
 
+    raise "UnknownDataError" if subjects[subject].nil? || grades[grade].nil? | !data[grades[grade]].keys.include?(year)
+
     @data[grades[grade]][year][subjects[subject]]
+
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
@@ -79,7 +90,12 @@ class StatewideTest
               :native_american => "Native American",
               :two_or_more => "Two or More",
               :white => "White"}
+    subjects = { :math => "Math",
+              :reading => "Reading",
+              :writing => "Writing"}
 
+    raise "UnknownDataError" if subjects[subject].nil? || races[race].nil? ||  @data[subject][races[race]].keys.include?(2016)
+    
     @data[subject][races[race]][year]
   end
 end
