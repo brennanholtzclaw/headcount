@@ -152,22 +152,23 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal ["ADAMS-ARAPAHOE 28J", 0.371], hca_st.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
   end
 
-  # Where 0.123 is their average percentage growth across years. If there are three years of proficiency data (year1, year2, year3), that's ((proficiency at year3) - (proficiency at year1)) / (year3 - year1).
+  def test_it_finds_top_statewide_leaders
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv",
+                        :math => "./test/data/average_race_math.csv",
+                        :reading => "./test/data/average_race_reading.csv",
+                        :writing => "./test/data/average_race_writing.csv"}})
 
+    hca_st = HeadcountAnalyst.new(dr_st)
 
+    expected = [["ADAMS-ARAPAHOE 28J", 0.371], ["COLORADO", 0.271], ["AGATE 300", 0.0]]
 
+    assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+  end
 
-
-
-
-
-
-
-
-
-
-
-
-
+#
+# ha.top_statewide_test_year_over_year_growth(grade: 3)
 
 end

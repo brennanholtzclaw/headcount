@@ -6,6 +6,7 @@ require './lib/district_repository'
 
 class HeadcountAnalyst
 attr_reader :master_repo
+attr_accessor :winner
 
   def initialize(data)
     @master_repo = data
@@ -143,7 +144,10 @@ attr_reader :master_repo
 
     grades = {3 => :third_grade, 8 => :eighth_grade}
 
-    winner = [["dummy",0.0]]
+    winner_qty = 1 if options[:top].nil? || options[:top] <= 1
+    winner_qty = options[:top] if !options[:top].nil? && options[:top] > 1
+
+    @winner = []
 
     @master_repo.district_repo.each do |district|
       if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
@@ -151,12 +155,20 @@ attr_reader :master_repo
         options[:district] = district[0]
         result = [district[0], year_over_year_growth(options)]
 
-        (winner << result).shift if result[1] > winner[0][1]
+        select_winner_or_winners(result)
       end
-
     end
-    winner[0]
+
+    @winner = @winner.sort_by{|elem| elem[1]}.reverse[0..(winner_qty - 1)]
+    if winner_qty == 1
+      @winner.flatten
+    else
+      @winner
+    end
   end
 
+  def select_winner_or_winners(result)
+    @winner << result
+  end
 
 end
