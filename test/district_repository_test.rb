@@ -1,8 +1,5 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require 'test_helper'
 require './lib/district_repository'
-require 'csv'
-
 
 class DistrictRepositoryTest < Minitest::Test
   attr_reader :dr
@@ -194,8 +191,3 @@ end
 # "AGUILAR REORGANIZED 6"=>#<District:0xXXXXXX @district={:name=>"AGUILAR REORGANIZED 6"}>},
 # @nested_filepaths={:statewide_testing=>{:third_grade=>"./test/data/3rd_grade_students_stub.csv"}}>
 #
-
-
-
-
-

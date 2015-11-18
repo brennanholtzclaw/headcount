@@ -10,6 +10,7 @@ attr_accessor :winner
 
   def initialize(data)
     @master_repo = data
+    @winner = []
   end
 
   def find_all_data(district, file_label)
@@ -137,17 +138,12 @@ attr_accessor :winner
 
   def top_statewide_test_year_over_year_growth(options)
     raise "InsufficientInformationError: A grade must be provided to answer this question" if options[:grade].nil?
-
     raise "InsufficientInformationError: A subject must be provided to answer this question" if options[:subject].nil?
-
     raise "UnknownDataError: #{options[:grade]} is not a known grade" if ![3,8].include?(options[:grade])
-
     grades = {3 => :third_grade, 8 => :eighth_grade}
 
     winner_qty = 1 if options[:top].nil? || options[:top] <= 1
     winner_qty = options[:top] if !options[:top].nil? && options[:top] > 1
-
-    @winner = []
 
     @master_repo.district_repo.each do |district|
       if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?

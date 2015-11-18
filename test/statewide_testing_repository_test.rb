@@ -1,6 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'pry'
+require 'test_helper'
 require_relative '../lib/statewide_testing_repository'
 
 class StatewideTestRepositoryTest < Minitest::Test

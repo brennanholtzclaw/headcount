@@ -1,7 +1,4 @@
-require 'minitest'
-require 'minitest/autorun'
-require 'minitest/pride'
-
+require 'test_helper'
 require_relative '../lib/statewide_testing_parser.rb'
 
 class StatewideParserTest < Minitest::Test
@@ -32,7 +29,7 @@ class StatewideParserTest < Minitest::Test
                   :reading => "./test/data/average_race_reading.csv",
                   :writing => "./test/data/average_race_writing.csv"}}
 
-    expected_third = {2008=>{"Math"=>0.857, "Reading"=>0.866, "Writing"=>0.671}, 
+    expected_third = {2008=>{"Math"=>0.857, "Reading"=>0.866, "Writing"=>0.671},
                       2009=>{"Math"=>0.824, "Reading"=>0.862, "Writing"=>0.706},
                       2010=>{"Math"=>0.849, "Reading"=>0.864, "Writing"=>0.662},
                       2011=>{"Math"=>0.819, "Reading"=>0.867, "Writing"=>0.678},
@@ -95,10 +92,3 @@ class StatewideParserTest < Minitest::Test
   end
 
 end
-
-
-
-
-
-
-

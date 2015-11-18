@@ -1,6 +1,4 @@
-require 'minitest'
-require 'minitest/autorun'
-require 'minitest/pride'
+require 'test_helper'
 require './lib/hc_analyst'
 
 class HeadcountAnalystTest < Minitest::Test

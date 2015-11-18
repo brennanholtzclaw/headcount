@@ -1,7 +1,6 @@
 require './test/test_helper'
 require './lib/master_parser'
 require './lib/file_io'
-require 'pry'
 
 class MasterParserTest < Minitest::Test
 
