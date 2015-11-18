@@ -114,3 +114,5 @@ class StatewideTest
     @data[subject][@race][@year]
   end
 end
+
+winner - don't shift/pop. run sort_by[1]
