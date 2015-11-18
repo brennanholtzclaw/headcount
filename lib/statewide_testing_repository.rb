@@ -5,7 +5,7 @@ require_relative 'master_parser'
 require_relative 'statewide_testing'
 
 class StatewideTestRepository
-attr_reader :enrollments, :location, :parser, :filepath
+attr_reader :statewide_testing, :location, :parser, :filepath
 
   def load_data(filepath)
     @filepath = filepath
