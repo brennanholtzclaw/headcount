@@ -1,7 +1,7 @@
 require './lib/district_repository'
 
 class District
-  attr_reader :district
+  attr_reader :district, :enrollment_data, :testing_data
 
   def initialize(data = {})
     # binding.pry

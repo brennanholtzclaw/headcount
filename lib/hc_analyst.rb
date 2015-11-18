@@ -1,5 +1,7 @@
 require 'csv'
 require 'pry'
+require 'bigdecimal'
+require 'bigdecimal/util'
 require './lib/district_repository'
 
 class HeadcountAnalyst
@@ -116,4 +118,45 @@ attr_reader :master_repo
       false
     end
   end
+
+  def year_over_year_growth(options)
+    grades = {3 => :third_grade, 8 => :eighth_grade}
+    subjects = { :math => "Math",
+              :reading => "Reading",
+              :writing => "Writing"}
+    districts_data =  @master_repo.district_repo[options[:district].upcase].testing_data.data[grades[options[:grade]]]
+
+    years = districts_data.keys
+    first_year_data = districts_data[years.min][subjects[options[:subject]]].to_d
+    last_year_data = districts_data[years.max][subjects[options[:subject]]].to_d
+    years_qty = years.count
+
+    (((last_year_data.to_d - first_year_data.to_d)/years_qty)*100).to_f.round(3)
+  end
+
+  def top_statewide_test_year_over_year_growth(options)
+    raise "InsufficientInformationError: A grade must be provided to answer this question" if options[:grade].nil?
+
+    raise "InsufficientInformationError: A subject must be provided to answer this question" if options[:subject].nil?
+
+    raise "UnknownDataError: #{options[:grade]} is not a known grade" if ![3,8].include?(options[:grade])
+
+    grades = {3 => :third_grade, 8 => :eighth_grade}
+
+    winner = [["dummy",0.0]]
+
+    @master_repo.district_repo.each do |district|
+      if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
+      else
+        options[:district] = district[0]
+        result = [district[0], year_over_year_growth(options)]
+
+        (winner << result).shift if result[1] > winner[0][1]
+      end
+
+    end
+    winner[0]
+  end
+
+
 end

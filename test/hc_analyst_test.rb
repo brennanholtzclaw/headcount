@@ -107,4 +107,67 @@ class HeadcountAnalystTest < Minitest::Test
     assert hca.kindergarten_participation_correlates_with_high_school_graduation(
     :across => ['Cheyenne County Re-5', 'Cheyenne Mountain 12'])
   end
+
+  def test_top_statewide_test_year_over_year_growth_raises_insufficient_info_error
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    assert_raises "InsufficientInformationError: A grade must be provided to answer this question" do
+      hca.top_statewide_test_year_over_year_growth(subject: :math)
+    end
+
+    assert_raises "InsufficientInformationError: A grade must be provided to answer this question" do
+      hca.top_statewide_test_year_over_year_growth(grade: 3)
+    end
+  end
+
+  def test_top_statewide_test_year_over_year_growth_raises_unknown_data_errors
+    create_district_repo_and_hc_analyst_with_multiple_files
+
+    assert_raises "UnknownDataError: 9 is not a known grade" do
+      hca.top_statewide_test_year_over_year_growth(subject: :math, grade: 9)
+    end
+  end
+
+  def test_it_finds_one_districts_percentage_growth
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    assert_equal -0.314, hca_st.year_over_year_growth(grade: 3, subject: :math, district: "Academy 20")
+  end
+
+  def test_it_finds_top_statewide_leader
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv",
+                        :math => "./test/data/average_race_math.csv",
+                        :reading => "./test/data/average_race_reading.csv",
+                        :writing => "./test/data/average_race_writing.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    assert_equal ["ADAMS-ARAPAHOE 28J", 0.371], hca_st.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+  end
+
+  # Where 0.123 is their average percentage growth across years. If there are three years of proficiency data (year1, year2, year3), that's ((proficiency at year3) - (proficiency at year1)) / (year3 - year1).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end

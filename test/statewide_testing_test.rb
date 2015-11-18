@@ -131,6 +131,15 @@ class StatewideTestTest < Minitest::Test
     assert_equal expected, st.race_file_scores(:asian,2011)
   end
 
+  def test_it_finds_all_test_scores_when_given_race_and_year_exception
+    st = setup_tests
+    expected = {math: 0.817, reading: 0.898, writing: 0.827}
+
+    assert_raises "UnknownRaceError" do
+      st.race_file_scores(:foreigner, 2011)
+    end
+  end
+
   def test_it_finds_data_by_race
     st = setup_tests
     expected = { 2011=>{:math=>0.817, :reading=>0.898, :writing=>0.827},
@@ -175,9 +184,19 @@ class StatewideTestTest < Minitest::Test
     assert_raises "UnknownDataError" do
       st.proficient_for_subject_by_grade_in_year(:rithmatic, 3, 2011)
     end
+  end
+
+  def test_raises_an_error_for_an_unknown_grade
+    st = setup_tests
+
     assert_raises "UnknownDataError" do
       st.proficient_for_subject_by_grade_in_year(:math, 4, 2011)
     end
+  end
+
+  def test_raises_an_error_for_an_unknown_year
+      st = setup_tests
+
     assert_raises "UnknownDataError" do
       st.proficient_for_subject_by_grade_in_year(:math, 3, 2015)
     end
@@ -189,15 +208,27 @@ class StatewideTestTest < Minitest::Test
     assert_equal 0.818, st.proficient_for_subject_by_race_in_year(:math, :asian, 2012)
   end
 
+
+
   def test_raises_an_error_for_an_unknown_grade_level
     st = setup_tests
 
     assert "UnknownDataError" do
       st.proficient_for_subject_by_grade_in_year(:math, 6, 2011)
     end
+  end
+
+  def test_raises_an_error_for_an_unknown_subject_in_other_method
+    st = setup_tests
+
     assert "UnknownDataError" do
-      st.proficient_for_subject_by_grade_in_year(:rithmatic, 3, 2008)
+    st.proficient_for_subject_by_grade_in_year(:rithmatic, 3, 2008)
     end
+  end
+
+  def test_raises_an_error_for_an_unknown_year_in_other_method
+    st = setup_tests
+
     assert "UnknownDataError" do
       st.proficient_for_subject_by_grade_in_year(:math, 3, 2016)
     end
