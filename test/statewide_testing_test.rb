@@ -74,9 +74,8 @@ class StatewideTestTest < Minitest::Test
     skip
     st = setup_tests
 
-    assert_raise_with_message(UnknownDataError,st.proficient_by_grade(5)) do
-      raise "UnknownDataError"
-    end
+    assert_raises "UnknownDataError: 9 is not in our list of files."
+      st.proficient_by_grade(9)
   end
 
   def test_it_finds_list_of_all_years_in_data
@@ -186,5 +185,6 @@ class StatewideTestTest < Minitest::Test
       st.proficient_for_subject_by_grade_in_year(:math, 6, 2008)
     end
   end
+
 
 end

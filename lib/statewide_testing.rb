@@ -13,7 +13,8 @@ class StatewideTest
     elsif grade == 8
       data[:eighth_grade]
     else
-      raise "UnknownDataError"
+      raise "UnknownDataError",
+      "#{grade} is not in our list of files."
     end
   end
 
