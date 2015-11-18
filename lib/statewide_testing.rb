@@ -113,6 +113,5 @@ class StatewideTest
     is_a_valid_subject?(subject)
     @data[subject][@race][@year]
   end
-end
 
-winner - don't shift/pop. run sort_by[1]
+end
