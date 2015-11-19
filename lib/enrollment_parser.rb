@@ -3,7 +3,7 @@ require 'pry'
 require_relative 'enrollment_repository'
 require_relative 'file_io'
 
-class Parser
+class EnrollmentParser
   attr_reader :parser_data
 
   def find_district_data_in_mult_files(district,filepath)

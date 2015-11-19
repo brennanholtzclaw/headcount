@@ -151,6 +151,7 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_it_finds_top_statewide_leader_for_grade_3_math
+    skip
     dr_st = DistrictRepository.new
     dr_st.load_data( {  :statewide_testing =>
                         { :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv"
@@ -191,7 +192,8 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal -0.005, hca_st.year_over_year_growth_all_subjects(grade: 3, district: "Academy 20")
   end
 
-  def test_it_finds_average_change_for_1_district_across_all_subjects_sangre_de_cristo
+  def test_it_finds_avg_change_for_1_district_across_all_subjects_sangre_de_cristo
+    skip
     dr_st = DistrictRepository.new
     dr_st.load_data( { :statewide_testing => {
                         :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
@@ -203,6 +205,7 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_it_finds_average_change_for_1_district_across_all_subjects_springfield
+    skip
     dr_st = DistrictRepository.new
     dr_st.load_data( { :statewide_testing => {
                         :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",

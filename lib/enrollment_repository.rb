@@ -1,7 +1,7 @@
 require 'csv'
 require 'pry'
 require_relative 'enrollment'
-require_relative 'parser'
+require_relative 'enrollment_parser'
 require_relative 'master_parser'
 
 class EnrollmentRepository
@@ -10,7 +10,7 @@ class EnrollmentRepository
   def load_data(filepath)
     @filepath = filepath
     @enrollments = {}
-    @parser = Parser.new
+    @parser = EnrollmentParser.new
 
     store_enrollment_instances
   end

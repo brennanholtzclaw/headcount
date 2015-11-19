@@ -28,14 +28,3 @@ attr_reader :statewide_testing, :location, :parser, :filepath
   end
 
 end
-
-
-# MasterParser DONE
-# TestingParser
-# StatewideTesting
-
-# 1) create testing_repo and testing instance files
-# 2) create test files
-# 3) testing repo creates a repository
-# 4) repo passes proper data to each instance
-#     ...

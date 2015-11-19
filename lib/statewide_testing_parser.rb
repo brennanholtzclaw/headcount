@@ -14,7 +14,6 @@ class StatewideTestParser
     @parser_data = {}
 
     filepath[:statewide_testing].each do |label, file|
-      # binding.pry
       if @grade_files.include?(label)
         a = reads_file_and_returns_1_districts_data_for_one_file(district,label,file)
       elsif @race_files.include?(label)

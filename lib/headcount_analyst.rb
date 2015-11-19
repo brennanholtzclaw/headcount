@@ -125,12 +125,18 @@ attr_accessor :winner
 
     districts_data =  @master_repo.district_repo[options[:district].upcase].testing_data.data[grades[options[:grade]]]
 
-    years_asc = districts_data.keys.sort
-    years_desc = years_asc.reverse
-    first_year_data = [0, 0.0]
-    last_year_data = [0, 0.0]
+    first_year_data = first_year_data_pair(districts_data,options)
+    last_year_data = last_year_data_pair(districts_data,options)
 
-    #TO FIND FIRST YEAR DATA PAIR
+    years_evaluated = ((last_year_data[0]) - (first_year_data[0]))
+
+    ((last_year_data[1].to_d - first_year_data[1].to_d)/years_evaluated).to_f.round(3)
+  end
+
+  def first_year_data_pair(districts_data,options)
+    first_year_data = [0, 0.0]
+    years_asc = districts_data.keys.sort
+
     years_asc.each do |year|
       score_in_csv =  districts_data[year][options[:subject]]
       if score_in_csv == 0 || score_in_csv == '#VALUE' || score_in_csv == 'N/A' || score_in_csv == 'LNE'
@@ -139,8 +145,13 @@ attr_accessor :winner
         break
       end
     end
+    first_year_data
+  end
 
-    #TO FIND LAST YEAR DATA PAIR
+  def last_year_data_pair(districts_data,options)
+    last_year_data = [0, 0.0]
+    years_desc = districts_data.keys.sort.reverse
+
     years_desc.each do |year|
       score_in_csv =  districts_data[year][options[:subject]]
       if score_in_csv == 0 || score_in_csv == '#VALUE' || score_in_csv == 'N/A' || score_in_csv == 'LNE'
@@ -149,10 +160,7 @@ attr_accessor :winner
         break
       end
     end
-
-    years_evaluated = ((last_year_data[0]) - (first_year_data[0]))
-
-    ((last_year_data[1].to_d - first_year_data[1].to_d)/years_evaluated).to_f.round(3)
+    last_year_data
   end
 
   def year_over_year_growth_all_subjects(options)

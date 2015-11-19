@@ -42,10 +42,14 @@ class StatewideTest
   end
 
   def is_a_valid_race?(race)
-    races = { :asian => "Asian", :black => "Black",
-              :pacific_islander => "Hawaiian/Pacific Islander", :hispanic => "Hispanic",
-              :native_american => "Native American", :two_or_more => "Two or More",
-              :white => "White"}
+    races = { :asian => "Asian",
+              :black => "Black",
+              :pacific_islander => "Hawaiian/Pacific Islander",
+              :hispanic => "Hispanic",
+              :native_american => "Native American",
+              :two_or_more => "Two or More",
+              :white => "White"
+            }
     if races[race]
       @race = races[race]
       true
@@ -78,12 +82,13 @@ class StatewideTest
 
   def race_file_scores(race, year)
     is_a_valid_race?(race)
+    @race = @race.downcase.to_sym if race.class == String
 
     scores = {}
     race_files = [:math, :reading, :writing]
 
     race_files.each do |symbol|
-      scores[symbol] = @data[symbol][@race.downcase.to_sym][year]
+      scores[symbol] = @data[symbol][@race][year]
     end
     scores
   end
@@ -104,6 +109,8 @@ class StatewideTest
     is_a_valid_grade?(grade)
     is_a_valid_year?(year)
 
+    @subject = @subject.downcase.to_sym if subject.class == String
+
     @data[@grade][year][@subject]
   end
 
@@ -111,7 +118,10 @@ class StatewideTest
     is_a_valid_race?(race)
     is_a_valid_year?(year)
     is_a_valid_subject?(subject)
-    @data[subject][@race.downcase.to_sym][@year]
+
+    @race = @race.downcase.to_sym if race.class == String
+
+    @data[subject][@race][@year]
   end
 
 end

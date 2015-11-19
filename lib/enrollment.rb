@@ -16,7 +16,6 @@ class Enrollment
 
   def kindergarten_participation_in_year(year)
     @kindergarten_participation[year]
-    # data[:kindergarten_partipation][year]
   end
 
   def graduation_rate_by_year
