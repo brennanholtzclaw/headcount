@@ -113,4 +113,5 @@ class StatewideTest
     is_a_valid_subject?(subject)
     @data[subject][@race][@year]
   end
+
 end

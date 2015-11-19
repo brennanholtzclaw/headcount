@@ -1,8 +1,5 @@
-require 'minitest/autorun'
-require 'minitest/pride'
-require './lib/district_repository'
-require 'csv'
-
+require_relative 'test_helper'
+require_relative '../lib/district_repository'
 
 class DistrictRepositoryTest < Minitest::Test
   attr_reader :dr
@@ -92,7 +89,7 @@ class DistrictRepositoryTest < Minitest::Test
 
     assert_equal 4, dr_test.district_repo.length
     assert_equal "#<District:", dr_test.district_repo["COLORADO"].to_s[0,11]
-    assert_equal "#<District:", dr_test.district_repo["A"].to_s[0,11]
+    refute_equal "A",           dr_test.district_repo["A"].to_s[0,11]
     assert_equal "#<District:", dr_test.district_repo["B"].to_s[0,11]
     assert_equal "#<District:", dr_test.district_repo["C"].to_s[0,11]
   end
@@ -194,8 +191,3 @@ end
 # "AGUILAR REORGANIZED 6"=>#<District:0xXXXXXX @district={:name=>"AGUILAR REORGANIZED 6"}>},
 # @nested_filepaths={:statewide_testing=>{:third_grade=>"./test/data/3rd_grade_students_stub.csv"}}>
 #
-
-
-
-
-

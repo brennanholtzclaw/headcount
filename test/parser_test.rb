@@ -1,7 +1,4 @@
-require 'minitest'
-require 'minitest/autorun'
-require 'minitest/pride'
-
+require_relative 'test_helper'
 require_relative '../lib/parser.rb'
 
 class ParserTest < Minitest::Test

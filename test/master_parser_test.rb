@@ -1,7 +1,6 @@
-require './test/test_helper'
-require './lib/master_parser'
-require './lib/file_io'
-require 'pry'
+require_relative '../test/test_helper'
+require_relative '../lib/master_parser'
+require_relative '../lib/file_io'
 
 class MasterParserTest < Minitest::Test
 
