@@ -6,12 +6,13 @@ require 'pry'
 class MasterParserTest < Minitest::Test
 
   def setup
-    @fixture_data = FileIO.get_data({:enrollment => {
-                   :kindergarten => "./test/data/district_test_fixture.csv"}})
+    @fixture_data = FileIO.get_data("./test/data/district_test_fixture.csv")
   end
 
   def test_it_returns_all_unique_districts
-    assert_equal 14, MasterParser.names(@fixture_data).length
+    fixture_datas = FileIO.get_data("./test/data/district_test_fixture.csv")
+
+    assert_equal 14, MasterParser.names(fixture_datas).length
   end
 
   def test_it_returns_all_unique_years
@@ -39,13 +40,42 @@ class MasterParserTest < Minitest::Test
     nested_filepaths = {  :enrollment => {
                           :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
                           :high_school_graduation => "./test/data/high_school_grad_sample.csv"}}
-    expected = ["Colorado", "ACADEMY 20", "ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12"]
+    expected = ["COLORADO", "ACADEMY 20", "ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12"]
 
     assert_equal expected, MasterParser.all_uniq_names(nested_filepaths)
   end
 
   def test_it_returns_empty_array_if_no_files_given
     assert_equal [], MasterParser.all_uniq_names()
+  end
+
+  def test_it_creates_list_of_ALL_CAPS_unique_names_from_all_files
+    nested_filepaths = {  :enrollment => {
+                          :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+                          :high_school_graduation => "./test/data/high_school_grad_sample.csv"}}
+    expected = ["COLORADO", "ACADEMY 20", "ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12"]
+
+    assert_equal expected, MasterParser.all_uniq_names(nested_filepaths)
+  end
+
+  def test_it_creates_list_of_names_from_just_enrollment_files
+    nested_filepaths = {  :enrollment => {
+                          :kindergarten => "./test/data/kindergarten_enrollment_sample.csv"},
+                          :testing => {
+                          :high_school_graduation => "./test/data/high_school_grad_sample.csv"}}
+    expected = ["COLORADO", "ACADEMY 20", "ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J"]
+
+    assert_equal expected, MasterParser.all_uniq_names(nested_filepaths, :enrollment)
+  end
+
+  def test_it_creates_list_of_names_from_just_testing_files
+    nested_filepaths = {  :enrollment => {
+                          :kindergarten => "./test/data/kindergarten_enrollment_sample.csv"},
+                          :testing => {
+                          :high_school_graduation => "./test/data/high_school_grad_sample.csv"}}
+    expected = ["COLORADO", "ACADEMY 20", "ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12"]
+
+    assert_equal expected, MasterParser.all_uniq_names(nested_filepaths, :testing)
   end
 
 end

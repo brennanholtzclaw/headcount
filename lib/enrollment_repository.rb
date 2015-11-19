@@ -8,28 +8,18 @@ class EnrollmentRepository
   attr_reader :enrollments, :location, :parser, :filepath
 
   def load_data(filepath)
-    @filepath = filepath[:enrollment]
+    @filepath = filepath
     @enrollments = {}
     @parser = Parser.new
-    @parser.read_file(@filepath)
 
     store_enrollment_instances
   end
 
   def store_enrollment_instances
-    @enrollment_data = FileIO.get_data(@filepath)
-
-    @instantiation_data = @enrollment_data
-
-    MasterParser.names(@enrollment_data).each do |name|
-
-      district = name.downcase
-
-      @enrollments[district] = Enrollment.new(@parser.all_data(district))
+    MasterParser.all_uniq_names(@filepath).each do |name|
+      @enrollments[name.downcase] = Enrollment.new(@parser.find_district_data_in_mult_files(name,@filepath))
     end
   end
-
-# MasterParser.flattened_data(@enrollment_data,district)
 
   def find_by_name(district)
     if @enrollments.include?(district.downcase)

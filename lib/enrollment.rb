@@ -16,12 +16,12 @@ class Enrollment
   end
 
   def graduation_rate_by_year
-    data[:high_school_graduation]
-  end
+   data[data.keys[0]][:high_school_graduation]
+ end
 
-  def graduation_rate_in_year(year)
-    data[:high_school_graduation][year]
-  end
+ def graduation_rate_in_year(year)
+   data[data.keys[0]][:high_school_graduation][year]
+ end
 
 end
 

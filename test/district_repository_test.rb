@@ -135,4 +135,67 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal "#<District:", dr_test.district_repo["MOE"].to_s[0,11]
   end
 
+  def create_and_load_district_repository_with_2_files
+    dr2 = DistrictRepository.new
+    dr2.load_data({ :enrollment => {
+                    :kindergarten => "./test/data/kindergarten_enrollment_sample.csv",
+                    :high_school_graduation => "./test/data/high_school_grad_sample.csv"}})
+    dr2
+  end
+
+  def test_it_loads_files_and_creates_approp_number_of_district_instances
+    dr_2 = create_and_load_district_repository_with_2_files
+
+    assert_equal 6, dr_2.district_repo.count
+  end
+
+  def test_it_loads_files_and_creates_approp_number_of_enrollment_instances
+    dr_2 = create_and_load_district_repository_with_2_files
+
+    assert_equal 6, dr_2.er.enrollments.count
+  end
+
+  def test_it_loads_files_and_populates_enrollment_instances_with_data
+    dr_2 = create_and_load_district_repository_with_2_files
+
+    assert_equal 11, dr_2.er.enrollments["academy 20"].data["academy 20"][:kindergarten].count
+    assert_equal 5, dr_2.er.enrollments["academy 20"].data["academy 20"][:high_school_graduation].count
+  end
+
+  def test_it_creates_an_enrollment_repo_when_using_load_data
+    dr = DistrictRepository.new
+    nested = { :statewide_testing => {
+                    :third_grade => "./test/data/3rd_grade_students_stub.csv"}}
+    dr.load_data(nested)
+    dr.instantiate_statewide_testing_repo(nested)
+
+    assert dr.str.statewide_testing.length > 5
+  end
+
+  def test_it_creates_enrollment_and_testing_repo
+    dr = DistrictRepository.new
+    nested = {:enrollment => {
+                :kindergarten => "./test/data/kindergarten_enrollment_sample.csv"},
+              :statewide_testing => {
+                :third_grade => "./test/data/3rd_grade_students_stub.csv"}}
+    dr.load_data(nested)
+
+    assert dr.str.statewide_testing.length > 5
+    assert dr.er.enrollments.length > 5
+  end
 end
+
+# <DistrictRepository:0xXXXXXX
+# @district_repo={"COLORADO"=>#<District:0xXXXXXX @district={:name=>"COLORADO"}>,
+# "ACADEMY 20"=>#<District:0xXXXXXX @district={:name=>"ACADEMY 20"}>,
+# "ADAMS COUNTY 14"=>#<District:0xXXXXXX @district={:name=>"ADAMS COUNTY 14"}>,
+# "ADAMS-ARAPAHOE 28J"=>#<District:0xXXXXXX @district={:name=>"ADAMS-ARAPAHOE 28J"}>,
+# "AGATE 300"=>#<District:0xXXXXXX @district={:name=>"AGATE 300"}>,
+# "AGUILAR REORGANIZED 6"=>#<District:0xXXXXXX @district={:name=>"AGUILAR REORGANIZED 6"}>},
+# @nested_filepaths={:statewide_testing=>{:third_grade=>"./test/data/3rd_grade_students_stub.csv"}}>
+#
+
+
+
+
+
