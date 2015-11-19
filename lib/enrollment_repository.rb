@@ -17,7 +17,7 @@ class EnrollmentRepository
 
   def store_enrollment_instances
     MasterParser.all_uniq_names(@filepath).each do |name|
-      @enrollments[name.downcase] = Enrollment.new(@parser.find_district_data_in_mult_files(name,@filepath))
+      @enrollments[name.downcase] = Enrollment.new(:name=>name, :data=>@parser.find_district_data_in_mult_files(name,@filepath))
     end
   end
 

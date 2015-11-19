@@ -1,7 +1,7 @@
 require_relative 'district_repository'
 
 class District
-  attr_reader :district, :enrollment_data, :testing_data
+  attr_reader :district, :enrollment_data, :testing_data, :enrollment
 
   def initialize(data = {})
     @district = data[:name]
@@ -10,6 +10,10 @@ class District
       @enrollment_data = data[:data][:enrollment]
       @testing_data = data[:data][:statewide_testing]
     end
+  end
+
+  def enrollment
+    @enrollment_data
   end
 
   def name

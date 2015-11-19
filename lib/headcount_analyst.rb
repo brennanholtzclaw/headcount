@@ -13,7 +13,7 @@ attr_accessor :winner
   end
 
   def find_all_data(district, file_label)
-    @master_repo.er.enrollments[district.downcase].data[district.downcase][file_label]
+    @master_repo.er.enrollments[district.downcase].data[file_label]
   end
 
   def average(district, file_label)
@@ -194,8 +194,7 @@ attr_accessor :winner
       end
     else
       @master_repo.district_repo.each do |district|
-        if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
-        else
+        unless @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
           options[:district] = district[0]
           result = [district[0], year_over_year_growth(options)]
 
@@ -216,5 +215,9 @@ attr_accessor :winner
   def select_winner_or_winners(result)
     @winner << result
   end
+
+  private
+
+
 
 end

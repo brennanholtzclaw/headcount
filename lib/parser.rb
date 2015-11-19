@@ -28,13 +28,14 @@ class Parser
 
     csv.readlines.each do |data|
       if data["Location"].downcase == district.downcase
-        if data_group[district.downcase].nil?
-          data_group[district.downcase] = {label => {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}}
+        if data_group[label].nil?
+          data_group[label] = {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}
         else
-          data_group[district.downcase][label][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
+          data_group[label][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
         end
       end
     end
     data_group
   end
 end
+
