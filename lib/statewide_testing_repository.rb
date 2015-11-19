@@ -2,7 +2,7 @@ require 'csv'
 require 'pry'
 require_relative 'statewide_testing_parser'
 require_relative 'master_parser'
-require_relative 'statewide_testing'
+require_relative 'statewide_test'
 
 class StatewideTestRepository
 attr_reader :statewide_testing, :location, :parser, :filepath

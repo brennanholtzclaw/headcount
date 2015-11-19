@@ -1,5 +1,5 @@
-require 'test_helper'
-require './lib/hc_analyst'
+require_relative 'test_helper'
+require_relative '../lib/headcount_analyst'
 
 class HeadcountAnalystTest < Minitest::Test
   attr_reader :dr, :ha, :dr2, :hca
