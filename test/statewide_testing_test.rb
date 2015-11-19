@@ -65,6 +65,7 @@ class StatewideTestTest < Minitest::Test
                     2014=>{"Math"=>0.685, "Reading"=>0.827, "Writing"=>0.748}}
 
     assert_equal third_grade, st.proficient_by_grade(3)
+
     assert_equal eighth_grade, st.proficient_by_grade(8)
   end
 

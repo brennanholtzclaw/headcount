@@ -155,8 +155,8 @@ class DistrictRepositoryTest < Minitest::Test
   def test_it_loads_files_and_populates_enrollment_instances_with_data
     dr_2 = create_and_load_district_repository_with_2_files
 
-    assert_equal 11, dr_2.er.enrollments["academy 20"].data["academy 20"][:kindergarten].count
-    assert_equal 5, dr_2.er.enrollments["academy 20"].data["academy 20"][:high_school_graduation].count
+    assert_equal 11, dr_2.er.enrollments["academy 20"].data[:kindergarten].count
+    assert_equal 5, dr_2.er.enrollments["academy 20"].data[:high_school_graduation].count
   end
 
   def test_it_creates_an_enrollment_repo_when_using_load_data

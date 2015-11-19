@@ -16,7 +16,7 @@ class Parser
       elsif @parser_data == {}
         @parser_data = a
       else
-        @parser_data[district.downcase][a[district.downcase].keys[0]] = a[district.downcase].values[0]
+        @parser_data[a.keys[0]] = a.values[0]
       end
     end
     @parser_data

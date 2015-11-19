@@ -14,7 +14,7 @@ class StatewideTest
     elsif grade == 8
       data[:eighth_grade]
     else
-      raise "UnknownDataError" #{grade} is not in our list of files."
+      fail UnknownDataError #{grade} is not in our list of files."
     end
   end
 
@@ -37,7 +37,7 @@ class StatewideTest
     if years.flatten.uniq.include?(year)
       @year = year
     else
-      raise "UnknownDataError"
+      fail UnknownDataError
     end
   end
 
@@ -50,7 +50,7 @@ class StatewideTest
       @race = races[race]
       true
     else
-      raise "UnknownRaceError"
+      fail UnknownDataError
     end
   end
 
@@ -62,7 +62,7 @@ class StatewideTest
       @subject = subjects[subject]
       true
     else
-      raise "UnknownDataError"
+      fail UnknownDataError
     end
   end
 
@@ -72,7 +72,7 @@ class StatewideTest
       @grade = grades[grade]
       true
     else
-      raise "UnknownDataError"
+      fail UnknownDataError
     end
   end
 
@@ -114,4 +114,8 @@ class StatewideTest
     @data[subject][@race][@year]
   end
 
+end
+
+
+class UnknownDataError < ArgumentError
 end

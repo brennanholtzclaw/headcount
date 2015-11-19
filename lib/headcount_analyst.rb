@@ -122,17 +122,37 @@ attr_accessor :winner
 
   def year_over_year_growth(options)
     grades = {3 => :third_grade, 8 => :eighth_grade}
-    subjects = { :math => "Math",
-              :reading => "Reading",
-              :writing => "Writing"}
+
     districts_data =  @master_repo.district_repo[options[:district].upcase].testing_data.data[grades[options[:grade]]]
 
-    years = districts_data.keys
-    first_year_data = districts_data[years.min][subjects[options[:subject]]].to_d
-    last_year_data = districts_data[years.max][subjects[options[:subject]]].to_d
-    years_qty = years.count
+    years_asc = districts_data.keys.sort
+    years_desc = years_asc.reverse
+    first_year_data = [0, 0.0]
+    last_year_data = [0, 0.0]
 
-    (((last_year_data.to_d - first_year_data.to_d)/years_qty)*100).to_f.round(3)
+    #TO FIND FIRST YEAR DATA PAIR
+    years_asc.each do |year|
+      score_in_csv =  districts_data[year][options[:subject]]
+      if score_in_csv == 0 || score_in_csv == '#VALUE' || score_in_csv == 'N/A' || score_in_csv == 'LNE'
+      elsif districts_data[year][options[:subject]] > 0
+        first_year_data  = [year, districts_data[year][options[:subject]]]
+        break
+      end
+    end
+
+    #TO FIND LAST YEAR DATA PAIR
+    years_desc.each do |year|
+      score_in_csv =  districts_data[year][options[:subject]]
+      if score_in_csv == 0 || score_in_csv == '#VALUE' || score_in_csv == 'N/A' || score_in_csv == 'LNE'
+      elsif districts_data[year][options[:subject]] > 0
+        last_year_data  = [year, districts_data[year][options[:subject]]]
+        break
+      end
+    end
+
+    years_evaluated = ((last_year_data[0]) - (first_year_data[0]))
+
+    ((last_year_data[1].to_d - first_year_data[1].to_d)/years_evaluated).to_f.round(3)
   end
 
   def year_over_year_growth_all_subjects(options)
@@ -143,7 +163,7 @@ attr_accessor :winner
     list = subjects.map do |subject|
       options[:subject] = subject[0]
       year_over_year_growth(options)
-    end.reduce(:+).to_d/subjects.length.to_d
+    end.reduce(:+)/subjects.length
 
     list.to_f.round(3)
   end
@@ -151,7 +171,7 @@ attr_accessor :winner
   def year_over_year_growth_all_subjects_weighted(options)
     weighting_total = options[:weighting][:math] + options[:weighting][:reading] + options[:weighting][:writing]
 
-    raise "WeightingInputError: weights MUST add up to 1" if weighting_total != 1
+    fail WeightingInputError, "weights MUST add up to 1" if weighting_total != 1
 
     subjects = { :math => "Math",
               :reading => "Reading",
@@ -164,9 +184,9 @@ attr_accessor :winner
   end
 
   def top_statewide_test_year_over_year_growth(options)
-    raise "InsufficientInformationError: A grade must be provided to answer this question" if options[:grade].nil?
+    fail InsufficientInformationError, "A grade must be provided to answer this question" if options[:grade].nil?
 
-    raise "UnknownDataError: #{options[:grade]} is not a known grade" if ![3,8].include?(options[:grade])
+    fail UnknownDataError, "#{options[:grade]} is not a known grade" if ![3,8].include?(options[:grade])
 
     grades = {3 => :third_grade, 8 => :eighth_grade}
 
@@ -182,23 +202,31 @@ attr_accessor :winner
           options[:district] = district[0]
           result = [district[0], year_over_year_growth_all_subjects(options)]
 
-          select_winner_or_winners(result)
+          if !result[1].nan?
+            select_winner_or_winners(result)
+          end
         end
       end
     elsif options[:subject].nil? && !options[:weighting].nil?
       @master_repo.district_repo.each do |district|
         options[:district] = district[0]
+
         result = [district[0], year_over_year_growth_all_subjects_weighted(options)]
 
-        select_winner_or_winners(result)
+        if !result[1].nan?
+          select_winner_or_winners(result)
+        end
       end
     else
       @master_repo.district_repo.each do |district|
         unless @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
           options[:district] = district[0]
+
           result = [district[0], year_over_year_growth(options)]
 
-          select_winner_or_winners(result)
+          if !result[1].nan?
+            select_winner_or_winners(result)
+          end
         end
       end
     end
@@ -216,8 +244,13 @@ attr_accessor :winner
     @winner << result
   end
 
-  private
+end
 
+class WeightingInputError < ArgumentError
+end
 
+class InsufficientInformationError < ArgumentError
+end
 
+class UnknownDataError < ArgumentError
 end

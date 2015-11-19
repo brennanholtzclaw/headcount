@@ -69,12 +69,12 @@ class EnrollmentRepositoryTest < Minitest::Test
       assert_equal expected, er.filepath[:enrollment]
     end
 
-    def test_it_finds_all_data_for_given_instance
+    def test_it_finds_enrollment_instance_for_given_name
       er = create_and_setup_enrollment_repository_w_2_files
 
       expected = {"academy 20"=>{:kindergarten=>{2007=>0.392, 2006=>0.354, 2005=>0.267, 2004=>0.302, 2008=>0.385, 2009=>0.39, 2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}, :high_school_graduation=>{2010=>0.895, 2011=>0.895, 2012=>0.89, 2013=>0.914, 2014=>0.898}}}
 
-      assert_equal expected, er.find_by_name("Academy 20").data
+      assert er.find_by_name("Academy 20").is_a?(Enrollment)
     end
 
 end
