@@ -10,7 +10,6 @@ attr_accessor :winner
 
   def initialize(data)
     @master_repo = data
-    @winner = []
   end
 
   def find_all_data(district, file_label)
@@ -136,26 +135,77 @@ attr_accessor :winner
     (((last_year_data.to_d - first_year_data.to_d)/years_qty)*100).to_f.round(3)
   end
 
+  def year_over_year_growth_all_subjects(options)
+    subjects = { :math => "Math",
+              :reading => "Reading",
+              :writing => "Writing"}
+
+    list = subjects.map do |subject|
+      options[:subject] = subject[0]
+      year_over_year_growth(options)
+    end.reduce(:+).to_d/subjects.length.to_d
+
+    list.to_f.round(3)
+  end
+
+  def year_over_year_growth_all_subjects_weighted(options)
+    weighting_total = options[:weighting][:math] + options[:weighting][:reading] + options[:weighting][:writing]
+
+    raise "WeightingInputError: weights MUST add up to 1" if weighting_total != 1
+
+    subjects = { :math => "Math",
+              :reading => "Reading",
+              :writing => "Writing"}
+
+    list = subjects.map do |subject|
+      options[:subject] = subject[0]
+      year_over_year_growth(options)*options[:weighting][subject[0]]
+    end.reduce(:+).to_f.round(3)
+  end
+
   def top_statewide_test_year_over_year_growth(options)
     raise "InsufficientInformationError: A grade must be provided to answer this question" if options[:grade].nil?
-    raise "InsufficientInformationError: A subject must be provided to answer this question" if options[:subject].nil?
+
     raise "UnknownDataError: #{options[:grade]} is not a known grade" if ![3,8].include?(options[:grade])
+
     grades = {3 => :third_grade, 8 => :eighth_grade}
 
     winner_qty = 1 if options[:top].nil? || options[:top] <= 1
     winner_qty = options[:top] if !options[:top].nil? && options[:top] > 1
 
-    @master_repo.district_repo.each do |district|
-      if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
-      else
+    @winner = []
+
+    if options[:subject].nil? && options[:weighting].nil?
+      @master_repo.district_repo.each do |district|
+        if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
+        else
+          options[:district] = district[0]
+          result = [district[0], year_over_year_growth_all_subjects(options)]
+
+          select_winner_or_winners(result)
+        end
+      end
+    elsif options[:subject].nil? && !options[:weighting].nil?
+      @master_repo.district_repo.each do |district|
         options[:district] = district[0]
-        result = [district[0], year_over_year_growth(options)]
+        result = [district[0], year_over_year_growth_all_subjects_weighted(options)]
 
         select_winner_or_winners(result)
       end
-    end
+    else
+      @master_repo.district_repo.each do |district|
+        if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
+        else
+          options[:district] = district[0]
+          result = [district[0], year_over_year_growth(options)]
 
-    @winner = @winner.sort_by{|elem| elem[1]}.reverse[0..(winner_qty - 1)]
+          select_winner_or_winners(result)
+        end
+      end
+    end
+    winner_sorted = @winner.sort_by{|elem| elem[1]}.reverse
+    winner_sorted.shift if winner_sorted[0][0] == "COLORADO"
+    @winner = winner_sorted[0..(winner_qty - 1)]
     if winner_qty == 1
       @winner.flatten
     else

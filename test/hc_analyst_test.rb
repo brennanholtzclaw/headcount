@@ -166,7 +166,84 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
   end
 
-#
-# ha.top_statewide_test_year_over_year_growth(grade: 3)
+  def test_it_finds_average_change_for_1_district_across_all_subjects
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv",
+                        :math => "./test/data/average_race_math.csv",
+                        :reading => "./test/data/average_race_reading.csv",
+                        :writing => "./test/data/average_race_writing.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    assert_equal -0.424, hca_st.year_over_year_growth_all_subjects(grade: 3, district: "Academy 20")
+  end
+
+  def test_it_finds_top_statewide_leader_across_all_subjects
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv",
+                        :math => "./test/data/average_race_math.csv",
+                        :reading => "./test/data/average_race_reading.csv",
+                        :writing => "./test/data/average_race_writing.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    expected = ["ADAMS-ARAPAHOE 28J", 0.062]
+
+    assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 3)
+  end
+
+  def test_it_finds_average_change_for_1_district_across_all_subjects_weighted
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    assert_equal 0.207, hca_st.year_over_year_growth_all_subjects_weighted(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0}, district: "Academy 20")
+  end
+
+  def test_raises_weighting_error
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    assert_raises "WeightingInputError: weights MUST add up to 1" do
+      hca_st.year_over_year_growth_all_subjects_weighted(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.2}, district: "Academy 20")
+    end
+  end
+
+  def test_it_finds_top_statewide_leader_across_all_subjects_weighted
+    dr_st = DistrictRepository.new
+    dr_st.load_data( {  :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    expected = ["ALAMOSA RE-11J", 2.857]
+
+    assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+  end
+
+  def test_it_finds_top_statewide_leader_across_all_subjects_weighted_w_mult_tops
+    dr_st = DistrictRepository.new
+    dr_st.load_data( {  :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
+                        :eighth_grade => "./test/data/8th_grade_students_stub.csv"}})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    expected = [["ALAMOSA RE-11J", 2.857], ["AKRON R-1", 0.857], ["ADAMS COUNTY 14", 0.508]]
+
+    assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 8, top: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+  end
 
 end
