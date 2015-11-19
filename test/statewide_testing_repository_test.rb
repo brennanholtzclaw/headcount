@@ -5,7 +5,7 @@ require_relative '../lib/statewide_testing_repository'
 
 class StatewideTestRepositoryTest < Minitest::Test
 
-  def test_it_reads_1_file_and_does_every_fucking_thing_at_once_and_shit_does_it_feel_good
+  def test_it_creates_statewide_testing_instances_when_1_file_loaded
     str = StatewideTestRepository.new
     str.load_data({
       :statewide_testing => {
@@ -14,7 +14,7 @@ class StatewideTestRepositoryTest < Minitest::Test
     assert_equal "#<StatewideTest", str.find_by_name("ACADEMY 20").to_s[0,15]
   end
 
-  def test_it_does_every_fucking_thing_at_once_and_shit_does_it_feel_good
+  def test_it_creates_statewide_testing_instances_when_multiple_files_loaded
     str = StatewideTestRepository.new
     str.load_data({
       :statewide_testing => {
