@@ -24,10 +24,10 @@ class EnrollmentTest < Minitest::Test
     er
   end
 
-  def test_it_is_initialized_with_data
+  def test_it_stores_data_passed_on_initialization
     instantiate_enrollment_with_kindergarten_data
 
-    assert_equal data, e.data
+    assert e.kindergarten_participation
   end
 
   def test_returns_kindergarten_participation_by_year

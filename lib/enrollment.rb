@@ -1,26 +1,29 @@
 require_relative 'enrollment_repository'
 
 class Enrollment
-  attr_reader :data
+  attr_reader :data, :name, :kindergarten_participation
 
-  def initialize(data)
-    @data = data
+  def initialize(all_data)
+    @data = all_data[:data]
+    @kindergarten_participation = all_data[:data][:kindergarten] if all_data[:data] && all_data[:data][:kindergarten]
+    @kindergarten_participation = all_data[:kindergarten_participation] if all_data[:kindergarten_participation]
+    @name = all_data[:name]
   end
 
   def kindergarten_participation_by_year
-    data[:kindergarten_participation]
+    @kindergarten_participation
   end
 
   def kindergarten_participation_in_year(year)
-    data[:kindergarten_participation][year]
+    @kindergarten_participation[year]
   end
 
   def graduation_rate_by_year
-   data[data.keys[0]][:high_school_graduation]
+    data[:high_school_graduation]
  end
 
  def graduation_rate_in_year(year)
-   data[data.keys[0]][:high_school_graduation][year]
+   data[:high_school_graduation][year]
  end
 
 end

@@ -14,7 +14,7 @@ class StatewideTest
     elsif grade == 8
       data[:eighth_grade]
     else
-      raise "UnknownDataError" #{grade} is not in our list of files."
+      fail UnknownDataError #{grade} is not in our list of files."
     end
   end
 
@@ -37,20 +37,24 @@ class StatewideTest
     if years.flatten.uniq.include?(year)
       @year = year
     else
-      raise "UnknownDataError"
+      fail UnknownDataError
     end
   end
 
   def is_a_valid_race?(race)
-    races = { :asian => "Asian", :black => "Black",
-              :pacific_islander => "Hawaiian/Pacific Islander", :hispanic => "Hispanic",
-              :native_american => "Native American", :two_or_more => "Two or More",
-              :white => "White"}
+    races = { :asian => "Asian",
+              :black => "Black",
+              :pacific_islander => "Hawaiian/Pacific Islander",
+              :hispanic => "Hispanic",
+              :native_american => "Native American",
+              :two_or_more => "Two or More",
+              :white => "White"
+            }
     if races[race]
       @race = races[race]
       true
     else
-      raise "UnknownRaceError"
+      fail UnknownDataError
     end
   end
 
@@ -62,7 +66,7 @@ class StatewideTest
       @subject = subjects[subject]
       true
     else
-      raise "UnknownDataError"
+      fail UnknownDataError
     end
   end
 
@@ -72,12 +76,13 @@ class StatewideTest
       @grade = grades[grade]
       true
     else
-      raise "UnknownDataError"
+      fail UnknownDataError
     end
   end
 
   def race_file_scores(race, year)
     is_a_valid_race?(race)
+    @race = @race.downcase.to_sym if race.class == String
 
     scores = {}
     race_files = [:math, :reading, :writing]
@@ -104,6 +109,8 @@ class StatewideTest
     is_a_valid_grade?(grade)
     is_a_valid_year?(year)
 
+    @subject = @subject.downcase.to_sym if subject.class == String
+
     @data[@grade][year][@subject]
   end
 
@@ -111,7 +118,13 @@ class StatewideTest
     is_a_valid_race?(race)
     is_a_valid_year?(year)
     is_a_valid_subject?(subject)
+
+    @race = @race.downcase.to_sym if race.class == String
+
     @data[subject][@race][@year]
   end
 
+end
+
+class UnknownDataError < ArgumentError
 end

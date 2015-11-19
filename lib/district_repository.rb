@@ -17,9 +17,8 @@ class DistrictRepository
     @nested_filepaths = nested_filepaths
     all_names = MasterParser.all_uniq_names(nested_filepaths)
 
-    instantiate_enrollment_repo(nested_filepaths) if nested_filepaths[:enrollment]
-
-    instantiate_statewide_testing_repo(nested_filepaths) if nested_filepaths[:statewide_testing]
+    create_e_repo(nested_filepaths) if nested_filepaths[:enrollment]
+    create_st_repo(nested_filepaths) if nested_filepaths[:statewide_testing]
 
     populate_district_repo(all_names)
   end
@@ -42,7 +41,7 @@ class DistrictRepository
     d_data
   end
 
-  def instantiate_enrollment_repo(nested_filepaths)
+  def create_e_repo(nested_filepaths)
     if nested_filepaths[:enrollment]
       @er = EnrollmentRepository.new
       @er.load_data(nested_filepaths)
@@ -51,7 +50,7 @@ class DistrictRepository
     end
   end
 
-  def instantiate_statewide_testing_repo(nested_filepaths)
+  def create_st_repo(nested_filepaths)
     if nested_filepaths[:statewide_testing]
       @str = StatewideTestRepository.new
       @str.load_data(nested_filepaths)
@@ -60,6 +59,14 @@ class DistrictRepository
     end
   end
 
+  def create_ep_repo(nested_filepaths)
+    if nested_filepaths[:economic_profile]
+      @ep = EconomicProfileRepository.new
+      @ep.load_data(nested_filepaths)
+    else
+      nil
+    end
+  end
 
   def find_by_name(name)
     if @district_repo.include?(name.upcase)

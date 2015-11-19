@@ -3,7 +3,7 @@ require 'pry'
 require_relative 'enrollment_repository'
 require_relative 'file_io'
 
-class Parser
+class EnrollmentParser
   attr_reader :parser_data
 
   def find_district_data_in_mult_files(district,filepath)
@@ -16,7 +16,7 @@ class Parser
       elsif @parser_data == {}
         @parser_data = a
       else
-        @parser_data[district.downcase][a[district.downcase].keys[0]] = a[district.downcase].values[0]
+        @parser_data[a.keys[0]] = a.values[0]
       end
     end
     @parser_data
@@ -28,13 +28,14 @@ class Parser
 
     csv.readlines.each do |data|
       if data["Location"].downcase == district.downcase
-        if data_group[district.downcase].nil?
-          data_group[district.downcase] = {label => {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}}
+        if data_group[label].nil?
+          data_group[label] = {data["TimeFrame"].to_i => data["Data"].to_f.round(3)}
         else
-          data_group[district.downcase][label][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
+          data_group[label][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
         end
       end
     end
     data_group
   end
 end
+

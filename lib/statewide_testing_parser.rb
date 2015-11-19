@@ -14,7 +14,6 @@ class StatewideTestParser
     @parser_data = {}
 
     filepath[:statewide_testing].each do |label, file|
-      # binding.pry
       if @grade_files.include?(label)
         a = reads_file_and_returns_1_districts_data_for_one_file(district,label,file)
       elsif @race_files.include?(label)
@@ -40,12 +39,12 @@ class StatewideTestParser
 
 
         if testing_group[label].nil?
-            testing_group = {label => {data["TimeFrame"].to_i => {data["Score"]=>data["Data"].to_f.round(3)}}}
+            testing_group = {label => {data["TimeFrame"].to_i => {data["Score"].downcase.to_sym =>data["Data"].to_f.round(3)}}}
         else
           if testing_group[label][data["TimeFrame"].to_i].nil?
-            testing_group[label][data["TimeFrame"].to_i] = {data["Score"]=>data["Data"].to_f.round(3)}
+            testing_group[label][data["TimeFrame"].to_i] = {data["Score"].downcase.to_sym =>data["Data"].to_f.round(3)}
           else
-            testing_group[label][data["TimeFrame"].to_i][data["Score"]] = data["Data"].to_f.round(3)
+            testing_group[label][data["TimeFrame"].to_i][data["Score"].downcase.to_sym] = data["Data"].to_f.round(3)
           end
         end
       end
@@ -58,15 +57,17 @@ class StatewideTestParser
     testing_group = {}
 
     csv.readlines.each do |data|
+      race_to_symbol = data["Race Ethnicity"].gsub(" ","_").gsub("/", "_").downcase.to_sym
+
       if data["Location"].downcase == district.downcase
         if testing_group[label].nil?
 
-            testing_group = {label => {data["Race Ethnicity"]=> {data["TimeFrame"].to_i=>data["Data"].to_f.round(3)}}}
+            testing_group = {label => {race_to_symbol => {data["TimeFrame"].to_i=>data["Data"].to_f.round(3)}}}
         else
-          if testing_group[label][data["Race Ethnicity"]].nil?
-            testing_group[label][data["Race Ethnicity"]] = {data["TimeFrame"].to_i=>data["Data"].to_f.round(3)}
+          if testing_group[label][race_to_symbol].nil?
+            testing_group[label][race_to_symbol] = {data["TimeFrame"].to_i=>data["Data"].to_f.round(3)}
           else
-            testing_group[label][data["Race Ethnicity"]][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
+            testing_group[label][race_to_symbol][data["TimeFrame"].to_i] = data["Data"].to_f.round(3)
           end
         end
       end

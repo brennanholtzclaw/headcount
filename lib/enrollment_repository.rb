@@ -1,7 +1,7 @@
 require 'csv'
 require 'pry'
 require_relative 'enrollment'
-require_relative 'parser'
+require_relative 'enrollment_parser'
 require_relative 'master_parser'
 
 class EnrollmentRepository
@@ -10,14 +10,14 @@ class EnrollmentRepository
   def load_data(filepath)
     @filepath = filepath
     @enrollments = {}
-    @parser = Parser.new
+    @parser = EnrollmentParser.new
 
     store_enrollment_instances
   end
 
   def store_enrollment_instances
     MasterParser.all_uniq_names(@filepath).each do |name|
-      @enrollments[name.downcase] = Enrollment.new(@parser.find_district_data_in_mult_files(name,@filepath))
+      @enrollments[name.downcase] = Enrollment.new(:name=>name, :data=>@parser.find_district_data_in_mult_files(name,@filepath))
     end
   end
 

@@ -98,7 +98,7 @@ class DistrictRepositoryTest < Minitest::Test
     create_and_load_district_repository
     filepath = { :enrollment => {
                  :kindergarten => "./test/data/district_test_fixture.csv"}}
-    dr.instantiate_enrollment_repo(filepath)
+    dr.create_e_repo(filepath)
 
     assert dr.er
   end
@@ -107,7 +107,7 @@ class DistrictRepositoryTest < Minitest::Test
     create_and_load_district_repository
     filepath = { :testing => {
                  :kindergarten => "./test/data/district_test_fixture.csv"}}
-    dr.instantiate_enrollment_repo(filepath)
+    dr.create_e_repo(filepath)
 
     assert dr.er
   end
@@ -155,8 +155,8 @@ class DistrictRepositoryTest < Minitest::Test
   def test_it_loads_files_and_populates_enrollment_instances_with_data
     dr_2 = create_and_load_district_repository_with_2_files
 
-    assert_equal 11, dr_2.er.enrollments["academy 20"].data["academy 20"][:kindergarten].count
-    assert_equal 5, dr_2.er.enrollments["academy 20"].data["academy 20"][:high_school_graduation].count
+    assert_equal 11, dr_2.er.enrollments["academy 20"].data[:kindergarten].count
+    assert_equal 5, dr_2.er.enrollments["academy 20"].data[:high_school_graduation].count
   end
 
   def test_it_creates_an_enrollment_repo_when_using_load_data
@@ -164,7 +164,7 @@ class DistrictRepositoryTest < Minitest::Test
     nested = { :statewide_testing => {
                     :third_grade => "./test/data/3rd_grade_students_stub.csv"}}
     dr.load_data(nested)
-    dr.instantiate_statewide_testing_repo(nested)
+    dr.create_st_repo(nested)
 
     assert dr.str.statewide_testing.length > 5
   end
