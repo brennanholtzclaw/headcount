@@ -83,7 +83,7 @@ class StatewideTest
     race_files = [:math, :reading, :writing]
 
     race_files.each do |symbol|
-      scores[symbol] = @data[symbol][@race][year]
+      scores[symbol] = @data[symbol][@race.downcase.to_sym][year]
     end
     scores
   end
@@ -111,11 +111,10 @@ class StatewideTest
     is_a_valid_race?(race)
     is_a_valid_year?(year)
     is_a_valid_subject?(subject)
-    @data[subject][@race][@year]
+    @data[subject][@race.downcase.to_sym][@year]
   end
 
 end
-
 
 class UnknownDataError < ArgumentError
 end
