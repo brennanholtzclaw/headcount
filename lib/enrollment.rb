@@ -25,6 +25,5 @@ class Enrollment
  def graduation_rate_in_year(year)
    data[:high_school_graduation][year]
  end
-
 end
 
