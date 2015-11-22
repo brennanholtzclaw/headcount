@@ -5,7 +5,6 @@ require_relative 'file_io'
 class EconomicProfileParser
   attr_reader
 
-
   def parser_key(file_symbol)
   end
 
@@ -76,6 +75,7 @@ class EconomicProfileParser
         fl_group[data["TimeFrame"].to_i] = {data["TimeFrame"].to_i => data[data_format]}
       end
     end
+  
     fl_group
   end
 

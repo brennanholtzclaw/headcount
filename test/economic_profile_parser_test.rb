@@ -41,7 +41,8 @@ class EconomicProfileParserTest < Minitest::Test
                       :free_or_reduced_price_lunch => "./test/data/free_or_reduced_price_lunch_sample.csv",
                       }
                     })
-    expected = {2014=>{:total=>976.0, :percentage=>0.08772}}
+    expected = {2014=>{:total=>3132.0, :percentage=>0.12743}}
+
 
     assert_equal expected, epr.find_by_name("ACADEMY 20").data[:free_or_reduced_price_lunch]
   end
