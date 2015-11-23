@@ -23,7 +23,7 @@ class EconomicProfile
     (income_list.reduce(:+))/(income_list.size)
   end
 
-  def estimated_median_household_income_average
+  def median_household_income_average
     mhi.values.reduce(:+)/mhi.values.count
   end
 

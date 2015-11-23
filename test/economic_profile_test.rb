@@ -34,7 +34,7 @@ class EconomicProfileTest < Minitest::Test
   def test_it_finds_median_income_average
     epr = instantiate_and_load_files
 
-    assert_equal 87635, epr.find_by_name("ACADEMY 20").estimated_median_household_income_average
+    assert_equal 87635, epr.find_by_name("ACADEMY 20").median_household_income_average
   end
 
 

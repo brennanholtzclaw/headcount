@@ -137,11 +137,8 @@ class HeadcountAnalystTest < Minitest::Test
   def test_it_finds_top_statewide_leader
     dr_st = DistrictRepository.new
     dr_st.load_data( { :statewide_testing => {
-                        :third_grade => "./test/data/3rd_grade_students_stub.csv",
-                        :eighth_grade => "./test/data/8th_grade_students_stub.csv",
-                        :math => "./test/data/average_race_math.csv",
-                        :reading => "./test/data/average_race_reading.csv",
-                        :writing => "./test/data/average_race_writing.csv"}})
+                        :third_grade => "./test/data/3rd_grade_students_stub.csv"
+                        }})
 
     hca_st = HeadcountAnalyst.new(dr_st)
 
@@ -157,7 +154,7 @@ class HeadcountAnalystTest < Minitest::Test
 
     hca_st = HeadcountAnalyst.new(dr_st)
 
-    expected = [["ADAMS-ARAPAHOE 28J", 0.004], ["COLORADO", 0.003], ["ACADEMY 20", -0.004]]
+    expected = [["ADAMS-ARAPAHOE 28J", 0.004], ["ACADEMY 20", -0.004], ["ADAMS COUNTY 14", -0.008]]
 
     assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
   end
@@ -187,7 +184,7 @@ class HeadcountAnalystTest < Minitest::Test
 
     hca_st = HeadcountAnalyst.new(dr_st)
 
-    expected = ["ADAMS-ARAPAHOE 28J", 0.001]
+    expected = ["AGATE 300", 0.012]
 
     assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 3)
   end
@@ -200,7 +197,7 @@ class HeadcountAnalystTest < Minitest::Test
 
     hca_st = HeadcountAnalyst.new(dr_st)
 
-    assert_equal 0.003, hca_st.year_over_year_growth_all_subjects_weighted(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0}, district: "Academy 20")
+    assert_equal -0.008, hca_st.year_over_year_growth_all_subjects_weighted(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0}, district: "Adams COUNTY 14")
   end
 
   def test_raises_weighting_error
@@ -224,9 +221,9 @@ class HeadcountAnalystTest < Minitest::Test
 
     hca_st = HeadcountAnalyst.new(dr_st)
 
-    expected = ["ALAMOSA RE-11J", 0.034]
+    expected = ["ADAMS-ARAPAHOE 28J", 0.002]
 
-    assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+    assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
   end
 
   def test_it_finds_top_statewide_leader_across_all_subjects_weighted_w_mult_tops
