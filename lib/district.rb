@@ -3,7 +3,7 @@ require_relative 'district_repository'
 class District
   attr_reader :district, :enrollment, :testing_data
 
-  def initialize(data = {})
+  def initialize(data)
     @district = data[:name]
 
     if !data[:data].nil?

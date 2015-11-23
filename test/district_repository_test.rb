@@ -170,13 +170,3 @@ class DistrictRepositoryTest < Minitest::Test
     assert dr.er.enrollments.length > 5
   end
 end
-
-# <DistrictRepository:0xXXXXXX
-# @district_repo={"COLORADO"=>#<District:0xXXXXXX @district={:name=>"COLORADO"}>,
-# "ACADEMY 20"=>#<District:0xXXXXXX @district={:name=>"ACADEMY 20"}>,
-# "ADAMS COUNTY 14"=>#<District:0xXXXXXX @district={:name=>"ADAMS COUNTY 14"}>,
-# "ADAMS-ARAPAHOE 28J"=>#<District:0xXXXXXX @district={:name=>"ADAMS-ARAPAHOE 28J"}>,
-# "AGATE 300"=>#<District:0xXXXXXX @district={:name=>"AGATE 300"}>,
-# "AGUILAR REORGANIZED 6"=>#<District:0xXXXXXX @district={:name=>"AGUILAR REORGANIZED 6"}>},
-# @nested_filepaths={:statewide_testing=>{:third_grade=>"./test/data/3rd_grade_students_stub.csv"}}>
-#

@@ -3,7 +3,7 @@ require 'pry'
 require_relative 'file_io'
 
 class EconomicProfileParser
-  attr_reader
+  attr_accessor :data_group
 
   def parser_key(file_symbol)
   end
@@ -65,15 +65,12 @@ class EconomicProfileParser
     end
 
     selected_rows.each do |data|
-      data_format = translate_format[data["DataFormat"]]
-      data_value = format_data(data)
-      time_frame = data["TimeFrame"].to_i
-
-      fl_group[label][time_frame] = {data_format => data_value} if fl_group[label].empty?
-
-      fl_group[label][time_frame][data_format] = format_data(data) if fl_group[label][time_frame]
-
-      fl_group[label][time_frame] = {data_format => format_data(data)} if fl_group[label][time_frame].nil?
+      formatted = translate_format[data["DataFormat"]]
+      value = format_data(data)
+      time = data["TimeFrame"].to_i
+      fl_group[label][time] = {formatted => value} if fl_group[label].empty?
+      fl_group[label][time][formatted] = value if fl_group[label][time]
+      fl_group[label][time] = {formatted => value} if fl_group[label][time].nil?
     end
     fl_group
   end
@@ -89,4 +86,5 @@ class EconomicProfileParser
     end
     ti_group
   end
+
 end
