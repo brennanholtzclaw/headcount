@@ -17,13 +17,13 @@ class EnrollmentRepository
 
   def store_enrollment_instances
     MasterParser.all_uniq_names(@filepath).each do |name|
-      @enrollments[name.downcase] = Enrollment.new(:name=>name, :data=>@parser.find_district_data_in_mult_files(name,@filepath))
+      @enrollments[name] = Enrollment.new(:name=>name, :data=>@parser.find_district_data_in_mult_files(name,@filepath))
     end
   end
 
   def find_by_name(district)
-    if @enrollments.include?(district.downcase)
-      @enrollments[district.downcase]
+    if @enrollments.include?(district.upcase)
+      @enrollments[district.upcase]
     end
   end
 

@@ -11,14 +11,14 @@ class EconomicProfile
     @title_i = @data[:title_i] if @data[:title_i]
   end
 
-  def incomes(year)
+  def relevant_yr_ranges(year)
     mhi.select do |year_range, income|
       (year_range[0]..year_range[1]).include?(year)
     end
   end
 
   def estimated_median_household_income_in_year(year)
-    income_list = incomes(year).map { |year_range, income| income }
+    income_list = relevant_yr_ranges(year).map { |year_range, income| income }
     data_error if income_list == []
     (income_list.reduce(:+))/(income_list.size)
   end

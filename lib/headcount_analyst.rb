@@ -13,7 +13,7 @@ attr_accessor :winner
   end
 
   def find_all_data(district, file_label)
-    @master_repo.er.enrollments[district.downcase].data[file_label]
+    @master_repo.er.enrollments[district.upcase].data[file_label]
   end
 
   def average(district, file_label)

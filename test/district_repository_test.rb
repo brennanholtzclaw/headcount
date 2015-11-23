@@ -104,27 +104,16 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_it_does_not_instantiates_enrollment_repo_if_filepath_does_not_contain_enrollment_datasets
-    create_and_load_district_repository
-    filepath = { :testing => {
-                 :kindergarten => "./test/data/district_test_fixture.csv"}}
-    dr.create_e_repo(filepath)
+    dr2 = DistrictRepository.new
+    dr2.load_data({:testing => {
+                    :kindergarten => "./test/data/district_test_fixture.csv"}})
 
-    assert dr.er
+    refute dr2.er
   end
 
   def test_it_populates_district_repo_with_multiple_pairs
     dr_test = DistrictRepository.new
     names = ["LARRY","CURLY","MOE"]
-    dr_test.populate_district_repo(names)
-
-    assert_equal "#<District:", dr_test.district_repo["LARRY"].to_s[0,11]
-    assert_equal "#<District:", dr_test.district_repo["CURLY"].to_s[0,11]
-    assert_equal "#<District:", dr_test.district_repo["MOE"].to_s[0,11]
-  end
-
-  def test_it_populates_district_repo_with_multiple_pairs_case_insensitive
-    dr_test = DistrictRepository.new
-    names = ["LARRY","curly","Moe"]
     dr_test.populate_district_repo(names)
 
     assert_equal "#<District:", dr_test.district_repo["LARRY"].to_s[0,11]
@@ -155,8 +144,8 @@ class DistrictRepositoryTest < Minitest::Test
   def test_it_loads_files_and_populates_enrollment_instances_with_data
     dr_2 = create_and_load_district_repository_with_2_files
 
-    assert_equal 11, dr_2.er.enrollments["academy 20"].data[:kindergarten].count
-    assert_equal 5, dr_2.er.enrollments["academy 20"].data[:high_school_graduation].count
+    assert_equal 11, dr_2.er.enrollments["ACADEMY 20"].data[:kindergarten].count
+    assert_equal 5, dr_2.er.enrollments["ACADEMY 20"].data[:high_school_graduation].count
   end
 
   def test_it_creates_an_enrollment_repo_when_using_load_data
