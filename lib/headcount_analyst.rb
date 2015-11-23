@@ -100,27 +100,10 @@ attr_accessor :winner
     results = districts.map do |district|
       kindergarten_participation_correlates_with_high_school_graduation(:for => district)
     end
-
     count_true = results.count(true).to_f
     count_total = results.length.to_f
-
-    percentage_true = (count_true/count_total)
-
-    if percentage_true >= 0.7
-      true
-    else
-      false
-    end
+    true if (count_true/count_total) >= 0.7
   end
-
-  # def kg_v_hs_correlation_across_districts(districts)
-  #   results = districts.map do |district|
-  #     kindergarten_participation_correlates_with_high_school_graduation(:for => district)
-  #   end
-  #   count_true = results.count(true).to_f
-  #   count_total = results.length.to_f
-  #   true if (count_true/count_total) >= 0.7
-  # end
 
   def year_over_year_growth(options)
     grades = {3 => :third_grade, 8 => :eighth_grade}
