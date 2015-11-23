@@ -37,12 +37,12 @@ class EconomicProfile
     cip[year]
   end
 
-  def free_or_reduced_price_lunch_in_year(year)
+  def free_or_reduced_price_lunch_percentage_in_year(year)
     data_error if frpl[year].nil?
     frpl[year][:percentage]
   end
 
-  def free_or_reduced_price_lunch_total_in_year(year)
+  def free_or_reduced_price_lunch_number_in_year(year)
     data_error if frpl[year].nil?
     frpl[year][:total]
   end

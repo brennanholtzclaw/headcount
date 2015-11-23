@@ -104,6 +104,7 @@ attr_accessor :winner
     first_year_data = first_year_data_pair(districts_data,options)
     last_year_data = last_year_data_pair(districts_data,options)
     years_evaluated = ((last_year_data[0]) - (first_year_data[0]))
+    return -1000.0 if first_year_data[0] == 0 || last_year_data[0] ==0
     ((last_year_data[1].to_d - first_year_data[1].to_d)/years_evaluated).to_f.round(3)
   end
 
@@ -138,10 +139,14 @@ attr_accessor :winner
   end
 
   def year_over_year_growth_all_subjects(options)
-    list = (subjects.map do |subject|
+    list = subjects.map do |subject|
       options[:subject] = subject[0]
       year_over_year_growth(options)
-    end.reduce(:+)/subjects.length).to_f.round(3)
+    end
+# binding.pry
+    return -1000.0 if list.include?(-1000.0)
+
+    list.reduce(:+)/subjects.length.to_f.round(3)
   end
 
   def year_over_year_growth_all_subjects_weighted(options)
@@ -167,6 +172,7 @@ attr_accessor :winner
       unless @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
         options[:district] = district[0]
         result = lookup_method_for_capturing_scores(options)
+        # binding.pry
         result if !result[1].nan? && !(result[0] == "COLORADO")
       end
     end.compact

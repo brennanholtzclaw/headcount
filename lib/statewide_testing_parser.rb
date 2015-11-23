@@ -58,7 +58,6 @@ class StatewideTestParser
 
     csv.readlines.each do |data|
       race_to_symbol = data["Race Ethnicity"].gsub(" ","_").gsub("/", "_").downcase.to_sym
-
       if data["Location"].downcase == district.downcase
         if testing_group[label].nil?
 
