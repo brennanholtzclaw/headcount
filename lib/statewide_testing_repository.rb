@@ -17,7 +17,7 @@ attr_reader :statewide_testing, :location, :parser, :filepath
 
   def store_testing_instances
     MasterParser.all_uniq_names(@filepath,:statewide_testing).each do |name|
-      @statewide_testing[name] = StatewideTest.new(@parser.find_district_data_in_mult_files(name,@filepath))
+      @statewide_testing[name] = StatewideTest.new(@parser.arrange_district_data(name,@filepath))
     end
   end
 

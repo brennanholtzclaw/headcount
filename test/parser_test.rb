@@ -9,7 +9,7 @@ class ParserTest < Minitest::Test
     @parser = EnrollmentParser.new
     expected = {:kindergarten=>{2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}}
 
-    assert_equal expected, @parser.find_district_data_in_mult_files("Academy 20", @filepath)
+    assert_equal expected, @parser.arrange_district_data("Academy 20", @filepath)
   end
 
   def test_it_reads_file_and_returns_one_districts_data_for_one_file
@@ -30,7 +30,7 @@ class ParserTest < Minitest::Test
                 :high_school_graduation => "./test/data/high_school_grad_sample.csv"}}
     expected = {:kindergarten=>{2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}, :high_school_graduation=>{2010=>0.895, 2011=>0.895, 2012=>0.89, 2013=>0.914, 2014=>0.898}}
 
-    assert_equal expected, parser.find_district_data_in_mult_files(district,filepath)
+    assert_equal expected, parser.arrange_district_data(district,filepath)
   end
 
   def test_multiple_file_reader_doesnt_break_if_only_one_file_given
@@ -40,6 +40,6 @@ class ParserTest < Minitest::Test
                 :kindergarten => "./test/data/district_test_fixture.csv"}}
     expected = {:kindergarten=>{2010=>0.436, 2011=>0.489, 2012=>0.479, 2013=>0.488, 2014=>0.49}}
 
-    assert_equal expected, parser.find_district_data_in_mult_files(district,filepath)
+    assert_equal expected, parser.arrange_district_data(district,filepath)
   end
 end

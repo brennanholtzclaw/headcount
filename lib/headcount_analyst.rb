@@ -4,6 +4,7 @@ require 'bigdecimal'
 require 'bigdecimal/util'
 require_relative 'district_repository'
 
+
 class HeadcountAnalyst
 attr_reader :master_repo
 attr_accessor :winner
@@ -17,8 +18,8 @@ attr_accessor :winner
   end
 
   def average(district, file_label)
-    district_dataset = find_all_data(district, file_label)
-    (district_dataset.values.inject(:+) / district_dataset.values.length).round(3)
+    dataset = find_all_data(district, file_label)
+    (dataset.values.inject(:+) / dataset.values.length).round(3)
   end
 
   def kindergarten_participation_rate_variation(district, options)
@@ -49,38 +50,30 @@ attr_accessor :winner
     (average(district, :high_school_graduation)/average(d2, :high_school_graduation)).round(3)
   end
 
-  def kindergarten_participation_against_high_school_graduation(district)
-    kindergarten_variation = kindergarten_participation_rate_variation(district, :against => "COLORADO")
+  def kindergarten_participation_against_high_school_graduation(d)
+    k_var = kindergarten_participation_rate_variation(d, :against => "COLORADO")
+    grad_var = high_school_graduation_rate_variation(d, :against => "COLORADO")
 
-    graduation_variation = high_school_graduation_rate_variation(district, :against => "COLORADO")
-
-    (kindergarten_variation / graduation_variation).round(3)
+    (k_var / grad_var).round(3)
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(options)
-    if options[:for] == 'STATEWIDE'
-      kg_v_hs_correlation_statewide
-    elsif options[:across]
-      kg_v_hs_correlation_across_districts(options[:across])
-    else
-      district = options[:for]
+    return kg_v_hs_correlation_statewide if options[:for] == 'STATEWIDE'
+    return kg_v_hs_correlation_across_districts(options[:across]) if options[:across]
+    return correlation?(options) if options[:for] && options[:for] != 'STATEWIDE'
+  end
 
-      kg_v_hs = kindergarten_participation_against_high_school_graduation(district)
-
-      if kg_v_hs > 0.6 && kg_v_hs < 1.5
-        true
-      else
-        false
-      end
+  def correlation?(options)
+    if options[:for] && options[:for] != 'STATEWIDE'
+      kg_v_hs = kindergarten_participation_against_high_school_graduation(options[:for])
+      true if kg_v_hs > 0.6 && kg_v_hs < 1.5
     end
   end
 
   def find_names_common_to_kg_and_hs_grad_files
     kg_file = @master_repo.er.filepath[:enrollment][:kindergarten]
     hs_grad_file = @master_repo.er.filepath[:enrollment][:high_school_graduation]
-
     kg_and_hs_files = [kg_file, hs_grad_file]
-
     MasterParser.all_common_names(kg_and_hs_files)
   end
 
@@ -119,6 +112,15 @@ attr_accessor :winner
       false
     end
   end
+
+  # def kg_v_hs_correlation_across_districts(districts)
+  #   results = districts.map do |district|
+  #     kindergarten_participation_correlates_with_high_school_graduation(:for => district)
+  #   end
+  #   count_true = results.count(true).to_f
+  #   count_total = results.length.to_f
+  #   true if (count_true/count_total) >= 0.7
+  # end
 
   def year_over_year_growth(options)
     grades = {3 => :third_grade, 8 => :eighth_grade}
@@ -251,7 +253,6 @@ attr_accessor :winner
   def select_winner_or_winners(result)
     @winner << result
   end
-
 end
 
 class WeightingInputError < ArgumentError

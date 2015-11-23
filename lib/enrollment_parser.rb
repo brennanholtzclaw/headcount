@@ -6,7 +6,7 @@ require_relative 'file_io'
 class EnrollmentParser
   attr_reader :parser_data
 
-  def find_district_data_in_mult_files(district,filepath)
+  def arrange_district_data(district,filepath)
     @parser_data = {}
 
     filepath[:enrollment].each do |label_x, file|

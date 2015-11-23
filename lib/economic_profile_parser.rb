@@ -8,7 +8,7 @@ class EconomicProfileParser
   def parser_key(file_symbol)
   end
 
-  def find_district_data_in_mult_files(district,filepath)
+  def arrange_district_data(district,filepath)
     @parser_data = {}
     filepath[:economic_profile].each do |label, file|
       data = med_hh_income_parser(district,label,file) if label == :median_household_income

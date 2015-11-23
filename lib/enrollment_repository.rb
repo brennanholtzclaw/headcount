@@ -17,7 +17,7 @@ class EnrollmentRepository
 
   def store_enrollment_instances
     MasterParser.all_uniq_names(@filepath).each do |name|
-      @enrollments[name] = Enrollment.new(:name=>name, :data=>@parser.find_district_data_in_mult_files(name,@filepath))
+      @enrollments[name] = Enrollment.new(:name=>name, :data=>@parser.arrange_district_data(name,@filepath))
     end
   end
 

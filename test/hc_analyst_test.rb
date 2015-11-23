@@ -94,16 +94,14 @@ class HeadcountAnalystTest < Minitest::Test
   def test_it_finds_correlation_across_the_state
     create_district_repo_and_hc_analyst_with_multiple_files
 
-    refute hca.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
+    assert_equal false, hca.kindergarten_participation_correlates_with_high_school_graduation(for: 'STATEWIDE')
   end
 
   def test_it_finds_correlation_across_the_given_list_of_districts
     create_district_repo_and_hc_analyst_with_multiple_files
 
-    refute hca.kindergarten_participation_correlates_with_high_school_graduation(
-    :across => ['Academy 20', 'Adams County 14', 'Cheyenne County Re-5', 'Cheyenne Mountain 12'])
-    assert hca.kindergarten_participation_correlates_with_high_school_graduation(
-    :across => ['Cheyenne County Re-5', 'Cheyenne Mountain 12'])
+    refute hca.kindergarten_participation_correlates_with_high_school_graduation(:across => ['Academy 20', 'Adams County 14', 'Cheyenne County Re-5', 'Cheyenne Mountain 12'])
+    assert hca.kindergarten_participation_correlates_with_high_school_graduation(:across => ['Cheyenne County Re-5', 'Cheyenne Mountain 12'])
   end
 
   def test_top_statewide_test_year_over_year_growth_raises_insufficient_info_error
@@ -150,20 +148,6 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal ["ADAMS-ARAPAHOE 28J", 0.004], hca_st.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
   end
 
-  def test_it_finds_top_statewide_leader_for_grade_3_math
-    skip
-    dr_st = DistrictRepository.new
-    dr_st.load_data( {  :statewide_testing =>
-                        { :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv"
-                        }
-                      })
-    hca_st = HeadcountAnalyst.new(dr_st)
-
-    assert_equal 0.3, hca_st.year_over_year_growth(grade: 3, subject: :math, district: "WILEY RE-13 JT")
-  end
-
-
-
   def test_it_finds_top_statewide_leaders
     dr_st = DistrictRepository.new
     dr_st.load_data( { :statewide_testing => {
@@ -190,31 +174,6 @@ class HeadcountAnalystTest < Minitest::Test
     hca_st = HeadcountAnalyst.new(dr_st)
 
     assert_equal -0.005, hca_st.year_over_year_growth_all_subjects(grade: 3, district: "Academy 20")
-  end
-
-  def test_it_finds_avg_change_for_1_district_across_all_subjects_sangre_de_cristo
-    skip
-    dr_st = DistrictRepository.new
-    dr_st.load_data( { :statewide_testing => {
-                        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-                        }}
-                    )
-    hca_st = HeadcountAnalyst.new(dr_st)
-
-    assert_equal 0.072, hca_st.year_over_year_growth_all_subjects(grade: 3, district: "SANGRE DE CRISTO RE-22J")
-  end
-
-  def test_it_finds_average_change_for_1_district_across_all_subjects_springfield
-    skip
-    dr_st = DistrictRepository.new
-    dr_st.load_data( { :statewide_testing => {
-                        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-                        }}
-                    )
-
-    hca_st = HeadcountAnalyst.new(dr_st)
-
-    assert_equal -0.003, hca_st.year_over_year_growth_all_subjects(grade: 3, district: "SPRINGFIELD RE-4")
   end
 
   def test_it_finds_top_statewide_leader_across_all_subjects

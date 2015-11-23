@@ -10,7 +10,7 @@ class StatewideTestParser
     @grade_files = [:third_grade, :eighth_grade]
   end
 
-  def find_district_data_in_mult_files(district,filepath)
+  def arrange_district_data(district,filepath)
     @parser_data = {}
 
     filepath[:statewide_testing].each do |label, file|
