@@ -35,15 +35,15 @@ class EnrollmentRepositoryTest < Minitest::Test
   def test_it_stores_districts
     create_and_setup_enrollment_repository
 
-    assert er.enrollments["colorado"]
-    refute er.enrollments["ohio"]
+    assert er.enrollments["COLORADO"]
+    refute er.enrollments["OHIO"]
     assert_equal 4, er.enrollments.length
   end
 
   def test_it_stores_enrollment_instances
     create_and_setup_enrollment_repository
 
-    assert_equal "#<Enrollment:", er.enrollments["colorado"].to_s[0,13]
+    assert_equal "#<Enrollment:", er.enrollments["COLORADO"].to_s[0,13]
   end
 
   def test_it_finds_instances_by_name

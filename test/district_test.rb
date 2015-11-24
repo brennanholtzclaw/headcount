@@ -22,7 +22,6 @@ class DistrictTest < Minitest::Test
     dr.load_data(nested)
 
     district = dr.find_by_name("ACADEMY 20")
-
     assert_equal "#<StatewideTest", district.statewide_test.to_s[0,15]
     end
 end

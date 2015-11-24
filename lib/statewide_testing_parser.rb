@@ -10,7 +10,7 @@ class StatewideTestParser
     @grade_files = [:third_grade, :eighth_grade]
   end
 
-  def find_district_data_in_mult_files(district,filepath)
+  def arrange_district_data(district,filepath)
     @parser_data = {}
 
     filepath[:statewide_testing].each do |label, file|
@@ -58,7 +58,6 @@ class StatewideTestParser
 
     csv.readlines.each do |data|
       race_to_symbol = data["Race Ethnicity"].gsub(" ","_").gsub("/", "_").downcase.to_sym
-
       if data["Location"].downcase == district.downcase
         if testing_group[label].nil?
 

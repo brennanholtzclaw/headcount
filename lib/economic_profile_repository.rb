@@ -17,7 +17,7 @@ attr_reader :economic_profile, :location, :parser, :filepath
 
   def store_testing_instances
     MasterParser.all_uniq_names(@filepath,:economic_profile).each do |name|
-      @economic_profile[name.downcase] = EconomicProfile.new(@parser.find_district_data_in_mult_files(name,@filepath))
+      @economic_profile[name.downcase] = EconomicProfile.new(@parser.arrange_district_data(name,@filepath))
     end
   end
 

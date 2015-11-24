@@ -6,19 +6,19 @@ require_relative 'district_repository'
 
 class HeadcountAnalyst
 attr_reader :master_repo
-attr_accessor :winner
+attr_accessor :winner, :single_test_ind, :all_subjects_test_ind
 
   def initialize(data)
     @master_repo = data
   end
 
   def find_all_data(district, file_label)
-    @master_repo.er.enrollments[district.downcase].data[file_label]
+    @master_repo.er.enrollments[district.upcase].data[file_label]
   end
 
   def average(district, file_label)
-    district_dataset = find_all_data(district, file_label)
-    (district_dataset.values.inject(:+) / district_dataset.values.length).round(3)
+    dataset = find_all_data(district, file_label)
+    (dataset.values.inject(:+) / dataset.values.length).round(3)
   end
 
   def kindergarten_participation_rate_variation(district, options)
@@ -30,6 +30,14 @@ attr_accessor :winner
       a = find_all_data(dist1, data_label)
       b = find_all_data(dist2, data_label)
       a.keys & b.keys
+  end
+
+  def grades
+    {3 => :third_grade, 8 => :eighth_grade}
+  end
+
+  def subjects
+    {:math => "Math", :reading => "Reading", :writing => "Writing"}
   end
 
   def kindergarten_participation_rate_variation_trend(dist1, options)
@@ -49,87 +57,57 @@ attr_accessor :winner
     (average(district, :high_school_graduation)/average(d2, :high_school_graduation)).round(3)
   end
 
-  def kindergarten_participation_against_high_school_graduation(district)
-    kindergarten_variation = kindergarten_participation_rate_variation(district, :against => "COLORADO")
+  def kindergarten_participation_against_high_school_graduation(d)
+    k_var = kindergarten_participation_rate_variation(d, :against => "COLORADO")
+    grad_var = high_school_graduation_rate_variation(d, :against => "COLORADO")
 
-    graduation_variation = high_school_graduation_rate_variation(district, :against => "COLORADO")
-
-    (kindergarten_variation / graduation_variation).round(3)
+    (k_var / grad_var).round(3)
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(options)
-    if options[:for] == 'STATEWIDE'
-      kg_v_hs_correlation_statewide
-    elsif options[:across]
-      kg_v_hs_correlation_across_districts(options[:across])
-    else
-      district = options[:for]
+    return kg_v_hs_correlation_statewide? if options[:for] == 'STATEWIDE'
+    return kg_v_hs_correlation_across_districts?(options[:across]) if options[:across]
+    return correlation?(options) if options[:for] && options[:for] != 'STATEWIDE'
+  end
 
-      kg_v_hs = kindergarten_participation_against_high_school_graduation(district)
-
-      if kg_v_hs > 0.6 && kg_v_hs < 1.5
-        true
-      else
-        false
-      end
+  def correlation?(options)
+    if options[:for] && options[:for] != 'STATEWIDE'
+      kg_v_hs = kindergarten_participation_against_high_school_graduation(options[:for])
+      true if kg_v_hs > 0.6 && kg_v_hs < 1.5
     end
   end
 
   def find_names_common_to_kg_and_hs_grad_files
     kg_file = @master_repo.er.filepath[:enrollment][:kindergarten]
     hs_grad_file = @master_repo.er.filepath[:enrollment][:high_school_graduation]
-
     kg_and_hs_files = [kg_file, hs_grad_file]
-
     MasterParser.all_common_names(kg_and_hs_files)
   end
 
-  def kg_v_hs_correlation_statewide
+  def kg_v_hs_correlation_statewide?
     districts = find_names_common_to_kg_and_hs_grad_files
-
     results = districts.map do |district|
       kindergarten_participation_correlates_with_high_school_graduation(:for => district)
     end
-
-    count_true = results.count(true).to_f
-    count_total = results.length.to_f
-
-    percentage_true = (count_true/count_total)
-
-    if percentage_true >= 0.7
-      true
-    else
-      false
-    end
+    if (results.count(true)/results.length) >= 0.7 then true else false end
   end
 
-  def kg_v_hs_correlation_across_districts(districts)
+  def kg_v_hs_correlation_across_districts?(districts)
     results = districts.map do |district|
       kindergarten_participation_correlates_with_high_school_graduation(:for => district)
     end
-
-    count_true = results.count(true).to_f
-    count_total = results.length.to_f
-
-    percentage_true = (count_true/count_total)
-
-    if percentage_true >= 0.7
-      true
-    else
-      false
-    end
+    if (results.count(true)/results.length) >= 0.7 then true else false end
   end
 
   def year_over_year_growth(options)
-    grades = {3 => :third_grade, 8 => :eighth_grade}
-
+    # binding.pry
     districts_data =  @master_repo.district_repo[options[:district].upcase].testing_data.data[grades[options[:grade]]]
-
     first_year_data = first_year_data_pair(districts_data,options)
     last_year_data = last_year_data_pair(districts_data,options)
-
     years_evaluated = ((last_year_data[0]) - (first_year_data[0]))
-
+    return -1000.0 if first_year_data[0] != 2008 && last_year_data != 2014 && single_test_ind == false
+    return -1000.0 if first_year_data[0] == 0 || last_year_data[0] ==0
+    return -1000.0 if first_year_data[0] != 2008 && last_year_data != 2014 && all_subjects_test_ind == true
     ((last_year_data[1].to_d - first_year_data[1].to_d)/years_evaluated).to_f.round(3)
   end
 
@@ -164,94 +142,68 @@ attr_accessor :winner
   end
 
   def year_over_year_growth_all_subjects(options)
-    subjects = { :math => "Math",
-              :reading => "Reading",
-              :writing => "Writing"}
-
     list = subjects.map do |subject|
-      options[:subject] = subject[0]
-      year_over_year_growth(options)
-    end.reduce(:+)/subjects.length
-
-    list.to_f.round(3)
+      temp_options = options
+      temp_options[:subject] = subject[0]
+      year_over_year_growth(temp_options)
+    end
+    # binding.pry
+    options.delete(:subject) if options[:subject]
+    return -1000.0 if list.include?(-1000.0)
+    (list.reduce(:+)/subjects.length).to_f.round(3)
   end
 
   def year_over_year_growth_all_subjects_weighted(options)
     weighting_total = options[:weighting][:math] + options[:weighting][:reading] + options[:weighting][:writing]
-
     fail WeightingInputError, "weights MUST add up to 1" if weighting_total != 1
 
-    subjects = { :math => "Math",
-              :reading => "Reading",
-              :writing => "Writing"}
-
     list = subjects.map do |subject|
-      options[:subject] = subject[0]
-      year_over_year_growth(options)*options[:weighting][subject[0]]
-    end.reduce(:+).to_f.round(3)
+      temp_options = options
+      temp_options[:subject] = subject[0]
+      year_over_year_growth(temp_options)*options[:weighting][subject[0]]
+    end
+    options.delete(:subject) if options[:subject]
+    list.reduce(:+).to_f.round(3)
   end
 
   def top_statewide_test_year_over_year_growth(options)
     fail InsufficientInformationError, "A grade must be provided to answer this question" if options[:grade].nil?
-
     fail UnknownDataError, "#{options[:grade]} is not a known grade" if ![3,8].include?(options[:grade])
 
-    grades = {3 => :third_grade, 8 => :eighth_grade}
+    @single_test_ind = true if options[:subject] && options[:weighting].nil?
+    @all_subjects_test_ind = true if options[:subject].nil? && options[:weighting].nil?
 
-    winner_qty = 1 if options[:top].nil? || options[:top] <= 1
-    winner_qty = options[:top] if !options[:top].nil? && options[:top] > 1
-
-    @winner = []
-
-    if options[:subject].nil? && options[:weighting].nil?
-      @master_repo.district_repo.each do |district|
-        if @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
-        else
-          options[:district] = district[0]
-          result = [district[0], year_over_year_growth_all_subjects(options)]
-
-          if !result[1].nan?
-            select_winner_or_winners(result)
-          end
-        end
-      end
-    elsif options[:subject].nil? && !options[:weighting].nil?
-      @master_repo.district_repo.each do |district|
+    winner = @master_repo.district_repo.map do |district|
+      # binding.pry
+      unless @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
         options[:district] = district[0]
-
-        result = [district[0], year_over_year_growth_all_subjects_weighted(options)]
-
-        if !result[1].nan?
-          select_winner_or_winners(result)
-        end
+        result = lookup_method_for_capturing_scores(options)
+        result if !result[1].nan? && !(result[0] == "COLORADO")
       end
-    else
-      @master_repo.district_repo.each do |district|
-        unless @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
-          options[:district] = district[0]
+    end.compact
+    # binding.pry
 
-          result = [district[0], year_over_year_growth(options)]
+    @single_test_ind = false
+    @all_subjects_test_ind = false
 
-          if !result[1].nan?
-            select_winner_or_winners(result)
-          end
-        end
-      end
-    end
-    winner_sorted = @winner.sort_by{|elem| elem[1]}.reverse
-    winner_sorted.shift if winner_sorted[0][0] == "COLORADO"
-    @winner = winner_sorted[0..(winner_qty - 1)]
-    if winner_qty == 1
-      @winner.flatten
-    else
-      @winner
-    end
+    winner_qty = options[:top] || 1
+    winner = winner.sort_by{|elem| elem[1]}.reverse[0..(winner_qty - 1)]
+    winner.flatten! if winner_qty == 1
+    winner
   end
 
-  def select_winner_or_winners(result)
-    @winner << result
+  def lookup_method_for_capturing_scores(options)
+    if options[:subject].nil? && options[:weighting].nil?
+# binding.pry
+      [options[:district], year_over_year_growth_all_subjects(options)]
+    elsif options[:subject].nil? && !options[:weighting].nil?
+# binding.pry
+      [options[:district], year_over_year_growth_all_subjects_weighted(options)]
+    else
+# binding.pry
+      [options[:district], year_over_year_growth(options)]
+    end
   end
-
 end
 
 class WeightingInputError < ArgumentError

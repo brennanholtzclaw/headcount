@@ -50,8 +50,8 @@ class StatewideParserTest < Minitest::Test
                         2014=>{:math=>0.685, :reading=>0.827, :writing=>0.748}
                       }
 
-    assert_equal expected_third, parser.find_district_data_in_mult_files(district,filepath)[:third_grade]
-    assert_equal expected_eighth, parser.find_district_data_in_mult_files(district,filepath)[:eighth_grade]
+    assert_equal expected_third, parser.arrange_district_data(district,filepath)[:third_grade]
+    assert_equal expected_eighth, parser.arrange_district_data(district,filepath)[:eighth_grade]
   end
 
   def test_it_reads_math_reading_and_writing_tests
@@ -91,9 +91,9 @@ class StatewideParserTest < Minitest::Test
                         :two_or_more=>{2011=>0.842, 2012=>0.846, 2013=>0.856, 2014=>0.009},
                         :white=>{2011=>0.851, 2012=>0.862, 2013=>0.861, 2014=>0.009}}
 
-    assert_equal expected_math, parser.find_district_data_in_mult_files(district,filepath)[:math]
-    assert_equal expected_reading, parser.find_district_data_in_mult_files(district,filepath)[:reading]
-    assert_equal expected_writing, parser.find_district_data_in_mult_files(district,filepath)[:writing]
+    assert_equal expected_math, parser.arrange_district_data(district,filepath)[:math]
+    assert_equal expected_reading, parser.arrange_district_data(district,filepath)[:reading]
+    assert_equal expected_writing, parser.arrange_district_data(district,filepath)[:writing]
   end
 
 end
