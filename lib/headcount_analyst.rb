@@ -6,7 +6,7 @@ require_relative 'district_repository'
 
 class HeadcountAnalyst
 attr_reader :master_repo
-attr_accessor :winner
+attr_accessor :winner, :single_test_ind, :all_subjects_test_ind
 
   def initialize(data)
     @master_repo = data
@@ -100,11 +100,14 @@ attr_accessor :winner
   end
 
   def year_over_year_growth(options)
+    # binding.pry
     districts_data =  @master_repo.district_repo[options[:district].upcase].testing_data.data[grades[options[:grade]]]
     first_year_data = first_year_data_pair(districts_data,options)
     last_year_data = last_year_data_pair(districts_data,options)
     years_evaluated = ((last_year_data[0]) - (first_year_data[0]))
+    return -1000.0 if first_year_data[0] != 2008 && last_year_data != 2014 && single_test_ind == false
     return -1000.0 if first_year_data[0] == 0 || last_year_data[0] ==0
+    return -1000.0 if first_year_data[0] != 2008 && last_year_data != 2014 && all_subjects_test_ind == true
     ((last_year_data[1].to_d - first_year_data[1].to_d)/years_evaluated).to_f.round(3)
   end
 
@@ -140,24 +143,23 @@ attr_accessor :winner
 
   def year_over_year_growth_all_subjects(options)
     list = subjects.map do |subject|
-      options[:subject] = subject[0]
-      year_over_year_growth(options)
+      temp_options = options
+      temp_options[:subject] = subject[0]
+      year_over_year_growth(temp_options)
     end
-# binding.pry
+    # binding.pry
+    options.delete(:subject) if options[:subject]
     return -1000.0 if list.include?(-1000.0)
-
-    list.reduce(:+)/subjects.length.to_f.round(3)
+    (list.reduce(:+)/subjects.length).to_f.round(3)
   end
 
   def year_over_year_growth_all_subjects_weighted(options)
     weighting_total = options[:weighting][:math] + options[:weighting][:reading] + options[:weighting][:writing]
-
     fail WeightingInputError, "weights MUST add up to 1" if weighting_total != 1
 
     list = subjects.map do |subject|
       temp_options = options
       temp_options[:subject] = subject[0]
-
       year_over_year_growth(temp_options)*options[:weighting][subject[0]]
     end
     options.delete(:subject) if options[:subject]
@@ -168,14 +170,21 @@ attr_accessor :winner
     fail InsufficientInformationError, "A grade must be provided to answer this question" if options[:grade].nil?
     fail UnknownDataError, "#{options[:grade]} is not a known grade" if ![3,8].include?(options[:grade])
 
+    @single_test_ind = true if options[:subject] && options[:weighting].nil?
+    @all_subjects_test_ind = true if options[:subject].nil? && options[:weighting].nil?
+
     winner = @master_repo.district_repo.map do |district|
+      # binding.pry
       unless @master_repo.district_repo[district[0]].testing_data.data[grades[options[:grade]]].nil?
         options[:district] = district[0]
         result = lookup_method_for_capturing_scores(options)
-        # binding.pry
         result if !result[1].nan? && !(result[0] == "COLORADO")
       end
     end.compact
+    # binding.pry
+
+    @single_test_ind = false
+    @all_subjects_test_ind = false
 
     winner_qty = options[:top] || 1
     winner = winner.sort_by{|elem| elem[1]}.reverse[0..(winner_qty - 1)]
@@ -185,10 +194,13 @@ attr_accessor :winner
 
   def lookup_method_for_capturing_scores(options)
     if options[:subject].nil? && options[:weighting].nil?
+# binding.pry
       [options[:district], year_over_year_growth_all_subjects(options)]
     elsif options[:subject].nil? && !options[:weighting].nil?
+# binding.pry
       [options[:district], year_over_year_growth_all_subjects_weighted(options)]
     else
+# binding.pry
       [options[:district], year_over_year_growth(options)]
     end
   end

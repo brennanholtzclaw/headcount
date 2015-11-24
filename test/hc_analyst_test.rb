@@ -187,6 +187,20 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal -1000.0, hca_st.year_over_year_growth_all_subjects(grade: 3, district: "AGATE 300")
   end
 
+#########################################
+  def test_finding_top_overall_districts
+    dr_st = DistrictRepository.new
+    dr_st.load_data( { :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_alt.csv",
+                        }})
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    assert_equal "SANGRE DE CRISTO RE-22J", hca_st.top_statewide_test_year_over_year_growth(grade: 3).first
+  end
+## I'm returning "MANCOS RE-6"
+
+
   def test_it_finds_top_statewide_leader_across_all_subjects
     dr_st = DistrictRepository.new
     dr_st.load_data( { :statewide_testing => {
@@ -198,10 +212,38 @@ class HeadcountAnalystTest < Minitest::Test
 
     hca_st = HeadcountAnalyst.new(dr_st)
 
-    expected = ["AGATE 300", 0.012]
+    expected = ["ADAMS-ARAPAHOE 28J", 0.001]
 
     assert_equal expected, hca_st.top_statewide_test_year_over_year_growth(grade: 3)
   end
+
+####################
+  def test_statewide_testing_relationships
+    dr_st = DistrictRepository.new
+    dr_st.load_data( {  :statewide_testing => {
+                        :third_grade => "./test/data/3rd_grade_alt.csv",
+                        :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv"
+                        }
+                      })
+
+    hca_st = HeadcountAnalyst.new(dr_st)
+
+    district = dr_st.find_by_name("ACADEMY 20")
+    statewide_test = district.statewide_test
+    assert statewide_test.is_a?(StatewideTest)
+
+    assert_equal "WILEY RE-13 JT", hca_st.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).first
+    assert_in_delta 0.3,  hca_st.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).last, 0.005
+########was returning "SANGRE DE CRISTO RE-22J"
+    assert_equal "COTOPAXI RE-3",  hca_st.top_statewide_test_year_over_year_growth(grade: 8, subject: :reading).first
+    assert_in_delta 0.13,  hca_st.top_statewide_test_year_over_year_growth(grade: 8, subject: :reading).last, 0.005
+
+    assert_equal "BETHUNE R-5",  hca_st.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing).first
+    assert_in_delta 0.148,  hca_st.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing).last, 0.005
+  end
+
+
+
 
   def test_it_finds_average_change_for_1_district_across_all_subjects_weighted
     dr_st = DistrictRepository.new
